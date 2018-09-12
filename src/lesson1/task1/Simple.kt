@@ -126,7 +126,6 @@ fun accountInThreeYears(initial: Int, percent: Int): Double {
 	return initial * percent_in_three_years
 }
 
-
 /**
  * Простая
  *
