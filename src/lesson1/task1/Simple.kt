@@ -2,6 +2,7 @@
 
 package lesson1.task1
 
+import java.lang.Math.pow
 import kotlin.math.*
 
 /**
@@ -107,9 +108,9 @@ fun thirdDigit(number: Int): Int = (number / 100) % 10
  * Определите время поезда в пути в минутах (в данном случае 216).
  */
 fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minutesArrive: Int): Int {
-	val alltimeDepart = hoursDepart * 60 + minutesDepart
-	val alltimeArrive = hoursArrive * 60 + minutesArrive
-	return alltimeArrive - alltimeDepart
+	val allTimeDepart = hoursDepart * 60 + minutesDepart
+	val allTimeArrive = hoursArrive * 60 + minutesArrive
+	return allTimeArrive - allTimeDepart
 
 }
 
@@ -122,7 +123,7 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
  */
 fun accountInThreeYears(initial: Int, percent: Int): Double {
 	val full_percent = 1 + percent / 100.0
-	val percent_in_three_years = java.lang.Math.pow(full_percent, 3.0)
+	val percent_in_three_years = pow(full_percent, 3.0)
 	return initial * percent_in_three_years
 }
 

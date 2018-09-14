@@ -1,9 +1,12 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson2.task1
 
 import lesson1.task1.discriminant
 import kotlin.math.max
-import kotlin.math.sqrt
+import lesson1.task1.sqr
+import kotlin.math.*
+import kotlin.system.measureTimeMillis
 
 /**
  * Пример
@@ -11,12 +14,12 @@ import kotlin.math.sqrt
  * Найти число корней квадратного уравнения ax^2 + bx + c = 0
  */
 fun quadraticRootNumber(a: Double, b: Double, c: Double): Int {
-    val discriminant = discriminant(a, b, c)
-    return when {
-        discriminant > 0.0 -> 2
-        discriminant == 0.0 -> 1
-        else -> 0
-    }
+	val discriminant = discriminant(a, b, c)
+	return when {
+		discriminant > 0.0 -> 2
+		discriminant == 0.0 -> 1
+		else -> 0
+	}
 }
 
 /**
@@ -25,11 +28,11 @@ fun quadraticRootNumber(a: Double, b: Double, c: Double): Int {
  * Получить строковую нотацию для оценки по пятибалльной системе
  */
 fun gradeNotation(grade: Int): String = when (grade) {
-    5 -> "отлично"
-    4 -> "хорошо"
-    3 -> "удовлетворительно"
-    2 -> "неудовлетворительно"
-    else -> "несуществующая оценка $grade"
+	5 -> "отлично"
+	4 -> "хорошо"
+	3 -> "удовлетворительно"
+	2 -> "неудовлетворительно"
+	else -> "несуществующая оценка $grade"
 }
 
 /**
@@ -38,22 +41,22 @@ fun gradeNotation(grade: Int): String = when (grade) {
  * Найти наименьший корень биквадратного уравнения ax^4 + bx^2 + c = 0
  */
 fun minBiRoot(a: Double, b: Double, c: Double): Double {
-    // 1: в главной ветке if выполняется НЕСКОЛЬКО операторов
-    if (a == 0.0) {
-        if (b == 0.0) return Double.NaN // ... и ничего больше не делать
-        val bc = -c / b
-        if (bc < 0.0) return Double.NaN // ... и ничего больше не делать
-        return -sqrt(bc)
-        // Дальше функция при a == 0.0 не идёт
-    }
-    val d = discriminant(a, b, c)   // 2
-    if (d < 0.0) return Double.NaN  // 3
-    // 4
-    val y1 = (-b + sqrt(d)) / (2 * a)
-    val y2 = (-b - sqrt(d)) / (2 * a)
-    val y3 = max(y1, y2)       // 5
-    if (y3 < 0.0) return Double.NaN // 6
-    return -sqrt(y3)           // 7
+	// 1: в главной ветке if выполняется НЕСКОЛЬКО операторов
+	if (a == 0.0) {
+		if (b == 0.0) return Double.NaN // ... и ничего больше не делать
+		val bc = -c / b
+		if (bc < 0.0) return Double.NaN // ... и ничего больше не делать
+		return -sqrt(bc)
+		// Дальше функция при a == 0.0 не идёт
+	}
+	val d = discriminant(a, b, c)   // 2
+	if (d < 0.0) return Double.NaN  // 3
+	// 4
+	val y1 = (-b + sqrt(d)) / (2 * a)
+	val y2 = (-b - sqrt(d)) / (2 * a)
+	val y3 = max(y1, y2)       // 5
+	if (y3 < 0.0) return Double.NaN // 6
+	return -sqrt(y3)           // 7
 }
 
 /**
@@ -62,7 +65,13 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * Мой возраст. Для заданного 0 < n < 200, рассматриваемого как возраст человека,
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
-fun ageDescription(age: Int): String = TODO()
+fun ageDescription(age: Int): String {
+	if (age in 1..199) {
+		if (age % 10 > 5 || age % 10 == 0 || age % 100 in 5..15) return "$age лет"
+		if (age % 10 == 1) return "$age год"
+		else return "$age года"
+	} else return "Введите возраст от 1 до 199"
+}
 
 /**
  * Простая
@@ -72,8 +81,18 @@ fun ageDescription(age: Int): String = TODO()
  * Определить, за какое время он одолел первую половину пути?
  */
 fun timeForHalfWay(t1: Double, v1: Double,
-                   t2: Double, v2: Double,
-                   t3: Double, v3: Double): Double = TODO()
+				   t2: Double, v2: Double,
+				   t3: Double, v3: Double): Double {
+	val s = (t1 * v1 + t2 * v2 + t3 * v3) / 2
+	val s1 = t1 * v1
+	val s2 = t2 * v2
+
+	when {
+		s <= s1 -> return s / v1
+		s <= (s1 + s2) -> return t1 + (s - s1) / v2
+		else -> return t1 + t2 + (s - s1 - s2) / v3
+	}
+}
 
 /**
  * Простая
@@ -85,8 +104,15 @@ fun timeForHalfWay(t1: Double, v1: Double,
  * Считать, что ладьи не могут загораживать друг друга
  */
 fun whichRookThreatens(kingX: Int, kingY: Int,
-                       rookX1: Int, rookY1: Int,
-                       rookX2: Int, rookY2: Int): Int = TODO()
+					   rookX1: Int, rookY1: Int,
+					   rookX2: Int, rookY2: Int): Int {
+	val rook1 = kingX == rookX1 || kingY == rookY1
+	val rook2 = kingX == rookX2 || kingY == rookY2
+		if (rook1 && rook2) return 3
+		if (rook2) return 2
+		if (rook1) return 1
+		else return 0
+}
 
 /**
  * Простая
@@ -99,8 +125,16 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
  * Считать, что ладья и слон не могут загораживать друг друга.
  */
 fun rookOrBishopThreatens(kingX: Int, kingY: Int,
-                          rookX: Int, rookY: Int,
-                          bishopX: Int, bishopY: Int): Int = TODO()
+						  rookX: Int, rookY: Int,
+						  bishopX: Int, bishopY: Int): Int {
+	val bishop = abs(kingX - bishopX) == abs(kingY - bishopY)
+	val rook = kingX == rookX || kingY == rookY
+		if (rook && bishop) return 3
+		if (bishop) return 2
+		if (rook) return 1
+		else return 0
+}
+
 
 /**
  * Простая
@@ -110,7 +144,18 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
  * прямоугольным (вернуть 1) или тупоугольным (вернуть 2).
  * Если такой треугольник не существует, вернуть -1.
  */
-fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
+fun triangleKind(a: Double, b: Double, c: Double): Int {
+		if (a >= b + c || b >= a + c || c >= a + b) return -1
+	val sqr_a = sqr(a)
+	val sqr_b = sqr(b)
+	val sqr_c = sqr(c)
+	val angle1 = sqr_b + sqr_c - sqr_a
+	val angle2 = sqr_b - sqr_c + sqr_a
+	val angle3 = sqr_c + -sqr_b + sqr_a
+		if (angle1 == 0.0 || angle2 == 0.0 || angle3 == 0.0) return 1
+		if (angle1 > 0.0 && angle2 > 0.0 && angle3 > 0.0) return 0
+		else return 2
+}
 
 /**
  * Средняя
@@ -120,4 +165,18 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = TODO()
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
+
+	val c_b = b - c
+	val a_b = b - a
+	val c_d = d - c
+	val a_d = d - a
+
+
+	if (a >= c && d >= b && a_b >= 0) return a_b
+	if (c >= a && d <= b && c_d >= 0) return c_d
+	if (a >= c && d <= b && a_d >= 0) return a_d
+	if (c >= a && d >= b && c_b >= 0) return c_b
+	return -1
+
+}
