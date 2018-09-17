@@ -1,6 +1,9 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson3.task1
 
+import lesson1.task1.sqr
+import kotlin.math.abs
 import kotlin.math.sqrt
 
 /**
@@ -9,11 +12,11 @@ import kotlin.math.sqrt
  * Вычисление факториала
  */
 fun factorial(n: Int): Double {
-    var result = 1.0
-    for (i in 1..n) {
-        result = result * i // Please do not fix in master
-    }
-    return result
+	var result = 1.0
+	for (i in 1..n) {
+		result = result * i // Please do not fix in master
+	}
+	return result
 }
 
 /**
@@ -22,13 +25,13 @@ fun factorial(n: Int): Double {
  * Проверка числа на простоту -- результат true, если число простое
  */
 fun isPrime(n: Int): Boolean {
-    if (n < 2) return false
-    if (n == 2) return true
-    if (n % 2 == 0) return false
-    for (m in 3..sqrt(n.toDouble()).toInt() step 2) {
-        if (n % m == 0) return false
-    }
-    return true
+	if (n < 2) return false
+	if (n == 2) return true
+	if (n % 2 == 0) return false
+	for (m in 3..sqrt(n.toDouble()).toInt() step 2) {
+		if (n % m == 0) return false
+	}
+	return true
 }
 
 /**
@@ -37,13 +40,13 @@ fun isPrime(n: Int): Boolean {
  * Проверка числа на совершенность -- результат true, если число совершенное
  */
 fun isPerfect(n: Int): Boolean {
-    var sum = 1
-    for (m in 2..n/2) {
-        if (n % m > 0) continue
-        sum += m
-        if (sum > n) break
-    }
-    return sum == n
+	var sum = 1
+	for (m in 2..n / 2) {
+		if (n % m > 0) continue
+		sum += m
+		if (sum > n) break
+	}
+	return sum == n
 }
 
 /**
@@ -52,11 +55,11 @@ fun isPerfect(n: Int): Boolean {
  * Найти число вхождений цифры m в число n
  */
 fun digitCountInNumber(n: Int, m: Int): Int =
-        when {
-            n == m -> 1
-            n < 10 -> 0
-            else -> digitCountInNumber(n / 10, m) + digitCountInNumber(n % 10, m)
-        }
+		when {
+			n == m -> 1
+			n < 10 -> 0
+			else -> digitCountInNumber(n / 10, m) + digitCountInNumber(n % 10, m)
+		}
 
 /**
  * Тривиальная
@@ -66,7 +69,20 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun digitNumber(n: Int): Int = TODO()
+fun digitNumber(n: Int): Int {
+	var numb = abs(n) //если n<0
+	var i = 0
+	if (numb == 0) return 1
+	else {
+		while (numb > 0) {
+			numb /= 10
+			i++
+		}
+
+		return i
+	}
+
+}
 
 /**
  * Простая
@@ -74,7 +90,20 @@ fun digitNumber(n: Int): Int = TODO()
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int = TODO()
+fun fib(n: Int): Int {
+	var left_fib = 1
+	var left_left_fib = 0
+	var numb_fib = 1
+	for (i in 2..n) {
+
+		numb_fib = left_fib + left_left_fib //нахождение очередного числа фибоначи
+		left_left_fib = left_fib //сдвиг элементов
+		left_fib = numb_fib
+
+	}
+	return numb_fib
+
+}
 
 /**
  * Простая
@@ -82,21 +111,51 @@ fun fib(n: Int): Int = TODO()
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка
  */
-fun lcm(m: Int, n: Int): Int = TODO()
+fun lcm(m: Int, n: Int): Int {
+	val nok = m * n / NOD(m, n)
+	return nok
+}
+
+fun NOD(m: Int, n: Int): Int {
+	var temp: Int
+	var max = m
+	var min = n
+	while (max != 0) {	//алгоритм Евклида
+		if (max < min) {
+			temp = max
+			max = min
+			min = temp
+		}
+		max %= min
+	}
+	return min
+}
 
 /**
  * Простая
  *
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
-fun minDivisor(n: Int): Int = TODO()
+fun minDivisor(n: Int): Int {
+	var max_del=sqrt(n.toDouble())
+	var i=2
+	while (i<=max_del) {
+		if (n%i==0) return i
+		i++
+	}
+	return n
+}
+
+
 
 /**
  * Простая
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int = TODO()
+fun maxDivisor(n: Int): Int {
+	return n/minDivisor(n) //тк наименьший делитель * на наибольший=n
+}
 
 /**
  * Простая
@@ -191,8 +250,29 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+	var now_lenth =0		//длинна до числа now_numb^2(вкл)
+	var now_numb=0
+	while (now_lenth<n) { //поиск длинны, в которой есть n
+		++now_numb
+		now_lenth+=digitNumber(sqr(now_numb))
+	}
+	var real_numb=sqr(now_numb) //число в котором ищем
+	var item_digit= now_lenth-n
+	return DigitItemUnderNumb(real_numb,item_digit) //item_digit меньше, чтобы сделать сдвиг
+}
 
+
+fun DigitItemUnderNumb(n:Int,i:Int): Int {
+	var j=0
+	var numb=n
+	while (j!=i) {
+		j++
+		numb/=10
+	}
+	return numb%10
+
+}
 /**
  * Сложная
  *

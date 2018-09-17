@@ -100,7 +100,10 @@ class Tests {
         assertEquals(2022222222, lcm(2, 1011111111))
         assertEquals(2022222222, lcm(1011111111, 2))
     }
-
+    @Test
+    fun NOD() {
+        assertEquals(10, NOD(10, 10))
+    }
     @Test
     @Tag("Easy")
     fun minDivisor() {
