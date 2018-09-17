@@ -78,10 +78,8 @@ fun digitNumber(n: Int): Int {
 			numb /= 10
 			i++
 		}
-
 		return i
 	}
-
 }
 
 /**
@@ -91,18 +89,15 @@ fun digitNumber(n: Int): Int {
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
 fun fib(n: Int): Int {
-	var left_fib = 1
-	var left_left_fib = 0
-	var numb_fib = 1
+	var leftFib = 1
+	var leftLeftFib = 0
+	var numbFib = 1
 	for (i in 2..n) {
-
-		numb_fib = left_fib + left_left_fib //нахождение очередного числа фибоначи
-		left_left_fib = left_fib //сдвиг элементов
-		left_fib = numb_fib
-
+		numbFib = leftFib + leftLeftFib //нахождение очередного числа фибоначи
+		leftLeftFib = leftFib //сдвиг элементов
+		leftFib = numbFib
 	}
-	return numb_fib
-
+	return numbFib
 }
 
 /**
@@ -120,7 +115,7 @@ fun NOD(m: Int, n: Int): Int {
 	var temp: Int
 	var max = m
 	var min = n
-	while (max != 0) {	//алгоритм Евклида
+	while (max != 0) {    //алгоритм Евклида
 		if (max < min) {
 			temp = max
 			max = min
@@ -137,15 +132,14 @@ fun NOD(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-	var max_del=sqrt(n.toDouble())
-	var i=2
-	while (i<=max_del) {
-		if (n%i==0) return i
+	var maxDel = sqrt(n.toDouble())
+	var i = 2
+	while (i <= maxDel) {
+		if (n % i == 0) return i
 		i++
 	}
 	return n
 }
-
 
 
 /**
@@ -153,9 +147,8 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int {
-	return n/minDivisor(n) //тк наименьший делитель * на наибольший=n
-}
+fun maxDivisor(n: Int): Int =
+		n / minDivisor(n) //тк наименьший делитель * на наибольший=n
 
 /**
  * Простая
@@ -251,28 +244,28 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun squareSequenceDigit(n: Int): Int {
-	var now_lenth =0		//длинна до числа now_numb^2(вкл)
-	var now_numb=0
-	while (now_lenth<n) { //поиск длинны, в которой есть n
-		++now_numb
-		now_lenth+=digitNumber(sqr(now_numb))
+	var nowLenth = 0        //длинна до числа now_numb^2(вкл)
+	var nowNumb = 0
+	while (nowLenth < n) { //поиск длинны, в которой есть n
+		++nowNumb
+		nowLenth += digitNumber(sqr(nowNumb))
 	}
-	var real_numb=sqr(now_numb) //число в котором ищем
-	var item_digit= now_lenth-n
-	return DigitItemUnderNumb(real_numb,item_digit) //item_digit меньше, чтобы сделать сдвиг
+	var realNumb = sqr(nowNumb) //число в котором ищем
+	var itemDigit = nowLenth - n
+	return DigitItemUnderNumb(realNumb, itemDigit) //item_digit меньше, чтобы сделать сдвиг
 }
 
 
-fun DigitItemUnderNumb(n:Int,i:Int): Int {
-	var j=0
-	var numb=n
-	while (j!=i) {
+fun DigitItemUnderNumb(n: Int, i: Int): Int {
+	var j = 0
+	var numb = n
+	while (j != i) {
 		j++
-		numb/=10
+		numb /= 10
 	}
-	return numb%10
-
+	return numb % 10
 }
+
 /**
  * Сложная
  *

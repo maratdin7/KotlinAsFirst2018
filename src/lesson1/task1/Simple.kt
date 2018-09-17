@@ -70,7 +70,8 @@ fun seconds(hours: Int, minutes: Int, seconds: Int): Int = hours * 3600 + minute
  * Определить длину того же отрезка в метрах (в данном случае 18.98).
  * 1 сажень = 3 аршина = 48 вершков, 1 вершок = 4.445 см.
  */
-fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double = (sagenes * 48 + arshins * 16 + vershoks) * 0.04445
+fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double =
+		(sagenes * 48 + arshins * 16 + vershoks) * 0.04445
 
 /**
  * Тривиальная
@@ -78,7 +79,8 @@ fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double = (sagenes
  * Пользователь задает угол в градусах, минутах и секундах (например, 36 градусов 14 минут 35 секунд).
  * Вывести значение того же угла в радианах (например, 0.63256).
  */
-fun angleInRadian(grad: Int, min: Int, sec: Int): Double = ((grad * 3600 + min * 60 + sec) * PI)/ (180*3600)
+fun angleInRadian(grad: Int, min: Int, sec: Int): Double =
+		((grad * 3600 + min * 60 + sec) * PI) / (180 * 3600)
 
 /**
  * Тривиальная
@@ -111,7 +113,6 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
 	val allTimeDepart = hoursDepart * 60 + minutesDepart
 	val allTimeArrive = hoursArrive * 60 + minutesArrive
 	return allTimeArrive - allTimeDepart
-
 }
 
 /**
@@ -122,9 +123,9 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
  * Например, 100 рублей под 10% годовых превратятся в 133.1 рубля
  */
 fun accountInThreeYears(initial: Int, percent: Int): Double {
-	val full_percent = 1 + percent / 100.0
-	val percent_in_three_years = pow(full_percent, 3.0)
-	return initial * percent_in_three_years
+	val fullPercent = 1 + percent / 100.0
+	val percentInThreeYears = pow(fullPercent, 3.0)
+	return initial * percentInThreeYears
 }
 
 /**
@@ -134,9 +135,9 @@ fun accountInThreeYears(initial: Int, percent: Int): Double {
  * Необходимо вывести число, полученное из заданного перестановкой цифр в обратном порядке (например, 874).
  */
 fun numberRevert(number: Int): Int {
-	val units= number % 10
-	val decade= (number % 100)/10
-	val hundreds=number/100
-	val new_number= units *100+ decade *10+ hundreds;
-		return new_number
+	val units = number % 10
+	val decade = (number % 100) / 10
+	val hundreds = number / 100
+	val newNumber = units * 100 + decade * 10 + hundreds
+	return newNumber
 }

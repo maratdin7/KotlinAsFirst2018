@@ -24,15 +24,12 @@ fun pointInsideCircle(x: Double, y: Double, x0: Double, y0: Double, r: Double) =
 fun isNumberHappy(number: Int): Boolean {
 	val firstHf = sumTwoDigit(number / 100)
 	val secondHf = sumTwoDigit(number % 100)
-	if (firstHf == secondHf) return true
-	else return false
+	return firstHf == secondHf
 }
 
 // сумма двух цифр
-fun sumTwoDigit(twoDigits: Int): Int {
-	val sum = twoDigits % 10 + twoDigits / 10
-	return sum
-}
+fun sumTwoDigit(twoDigits: Int): Int =
+		twoDigits % 10 + twoDigits / 10
 
 /**
  * Простая
@@ -43,10 +40,8 @@ fun sumTwoDigit(twoDigits: Int): Int {
  */
 fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
 	val ans = rookOrBishopThreatens(x1, y1, x2, y2, x2, y2)
-	if (ans == 0) return false
-	else return true
+	return ans != 0
 }
-
 
 /**
  * Простая
@@ -55,18 +50,17 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
  * Вернуть число дней в этом месяце этого года по григорианскому календарю.
  */
 fun daysInMonth(month: Int, year: Int): Int {
-	if (month != 2) {
-		if (month in 1..7 && month % 2 == 1) return 31
-		else if (month in 8..12 && month % 2 == 0) return 31
-		else return 30
-	} else if (leapYear(year)) return 29
+	if (month != 2)
+		return when {
+			(month in 1..7 && month % 2 == 1) -> 31
+			(month in 8..12 && month % 2 == 0) -> 31
+			else -> 30
+		} else if (leapYear(year)) return 29
 	else return 28
 }
 
-fun leapYear(year: Int): Boolean {
-	if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) return true
-	else return false
-}
+fun leapYear(year: Int): Boolean =
+		((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)
 
 /**
  * Средняя
@@ -93,17 +87,15 @@ fun circleInside(x1: Double, y1: Double, r1: Double,
  * Вернуть true, если кирпич пройдёт
  */
 fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
-	val a_b=isItInserted (a,b,r,s)
-	val a_c=isItInserted(a,c,r,s)
-	val c_b=isItInserted(c,b,r,s)
-	if (a_b || a_c || c_b) return true
-	else return false
-	}
+	val ab = isItInserted(a, b, r, s)
+	val ac = isItInserted(a, c, r, s)
+	val cb = isItInserted(c, b, r, s)
+	return (ab || ac || cb)
+}
 
 //Проверка размеров кирпича
-fun isItInserted(a: Int, b: Int, r: Int, s: Int): Boolean {
-	if (a<=r && b<=s) return true
-	else if (a<=s && b<=r) return true
-	else return false
-
+fun isItInserted(a: Int, b: Int, r: Int, s: Int): Boolean = when {
+	(a <= r && b <= s) -> true
+	(a <= s && b <= r) -> true
+	else -> false
 }
