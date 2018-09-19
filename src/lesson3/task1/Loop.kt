@@ -3,6 +3,7 @@
 package lesson3.task1
 
 import lesson1.task1.sqr
+import java.lang.Math.pow
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -72,13 +73,13 @@ fun digitCountInNumber(n: Int, m: Int): Int =
 fun digitNumber(n: Int): Int {
 	var numb = abs(n) //если n<0
 	var i = 0
-	if (numb == 0) return 1
+	return if (numb == 0) 1
 	else {
 		while (numb > 0) {
 			numb /= 10
 			i++
 		}
-		return i
+		i
 	}
 }
 
@@ -106,12 +107,11 @@ fun fib(n: Int): Int {
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка
  */
-fun lcm(m: Int, n: Int): Int {
-	val nok = m * n / NOD(m, n)
-	return nok
-}
+fun lcm(m: Int, n: Int): Int =
+		m * n / Nod(m, n)
 
-fun NOD(m: Int, n: Int): Int {
+
+fun Nod(m: Int, n: Int): Int {
 	var temp: Int
 	var max = m
 	var min = n
@@ -132,11 +132,9 @@ fun NOD(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-	var maxDel = sqrt(n.toDouble())
-	var i = 2
-	while (i <= maxDel) {
+	var maxDel = sqrtInt(n)
+	for (i in 2..maxDel) {
 		if (n % i == 0) return i
-		i++
 	}
 	return n
 }
@@ -157,7 +155,7 @@ fun maxDivisor(n: Int): Int =
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean = TODO()
+fun isCoPrime(m: Int, n: Int): Boolean = Nod(m, n) == 1
 
 /**
  * Простая
@@ -166,7 +164,13 @@ fun isCoPrime(m: Int, n: Int): Boolean = TODO()
  * то есть, существует ли такое целое k, что m <= k*k <= n.
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
-fun squareBetweenExists(m: Int, n: Int): Boolean = TODO()
+fun squareBetweenExists(m: Int, n: Int): Boolean {
+	val left = sqrtInt(m)
+	val right = sqrtInt(n)
+	return left != right || sqr(left) == m || sqr(right) == n
+}
+
+fun sqrtInt(x: Int): Int = sqrt(x.toDouble()).toInt()
 
 /**
  * Средняя
@@ -184,7 +188,11 @@ fun squareBetweenExists(m: Int, n: Int): Boolean = TODO()
  * Написать функцию, которая находит, сколько шагов требуется для
  * этого для какого-либо начального X > 0.
  */
-fun collatzSteps(x: Int): Int = TODO()
+fun collatzSteps(x: Int): Int = when {
+	(x == 1) -> 0
+	(x % 2 == 0) -> collatzSteps(x / 2) + 1
+	else -> collatzSteps(3 * x + 1) + 1
+}
 
 /**
  * Средняя
@@ -193,7 +201,10 @@ fun collatzSteps(x: Int): Int = TODO()
  * sin(x) = x - x^3 / 3! + x^5 / 5! - x^7 / 7! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun sin(x: Double, eps: Double): Double = TODO()
+fun sin(x: Double, eps: Double): Double =TODO()
+
+
+fun parity(i:Int) : Int =if (i%2==0) -1 else 1
 
 /**
  * Средняя
@@ -243,28 +254,7 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int {
-	var nowLenth = 0        //длинна до числа now_numb^2(вкл)
-	var nowNumb = 0
-	while (nowLenth < n) { //поиск длинны, в которой есть n
-		++nowNumb
-		nowLenth += digitNumber(sqr(nowNumb))
-	}
-	var realNumb = sqr(nowNumb) //число в котором ищем
-	var itemDigit = nowLenth - n
-	return DigitItemUnderNumb(realNumb, itemDigit) //item_digit меньше, чтобы сделать сдвиг
-}
-
-
-fun DigitItemUnderNumb(n: Int, i: Int): Int {
-	var j = 0
-	var numb = n
-	while (j != i) {
-		j++
-		numb /= 10
-	}
-	return numb % 10
-}
+fun squareSequenceDigit(n: Int): Int = sequence(n, true)
 
 /**
  * Сложная
@@ -275,4 +265,27 @@ fun DigitItemUnderNumb(n: Int, i: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int = sequence(n, false)
+
+
+fun sequence(n: Int, typeTask: Boolean): Int { //функция нахождения нужного числа в последовательности
+	var nowLenth = 0        //длинна до числа now_numb^2(вкл)
+	var nowNumb = 0
+	var realNumb = 0
+	while (nowLenth < n) { //поиск длинны, в которой есть n
+		++nowNumb
+		realNumb = if (typeTask) sqr(nowNumb) else fib(nowNumb) //Выбор числа в зависимости от задачи(true-квадрат false-фибоначи)
+		nowLenth += digitNumber(realNumb) //Длинна на данный момент
+	}
+
+	var itemDigit = nowLenth - n
+	return digitItemUnderNumb(realNumb, itemDigit) //item_digit меньше, чтобы сделать сдвиг
+}
+
+fun digitItemUnderNumb(n: Int, i: Int): Int {  // поиск нужной цифры
+	var numb = n
+	for (j in 1..i) {
+		numb /= 10
+	}
+	return numb % 10
+}

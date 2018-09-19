@@ -148,12 +148,12 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
 	if (a >= b + c || b >= a + c || c >= a + b) return -1
-	val sqr_a = sqr(a)
-	val sqr_b = sqr(b)
-	val sqr_c = sqr(c)
-	val angle1 = sqr_b + sqr_c - sqr_a
-	val angle2 = sqr_b - sqr_c + sqr_a
-	val angle3 = sqr_c + -sqr_b + sqr_a
+	val sqrA = sqr(a)
+	val sqrB = sqr(b)
+	val sqrC = sqr(c)
+	val angle1 = sqrB + sqrC - sqrA
+	val angle2 = sqrB - sqrC + sqrA
+	val angle3 = sqrC - sqrB + sqrA
 	return when {
 		(angle1 == 0.0 || angle2 == 0.0 || angle3 == 0.0) -> 1
 		(angle1 > 0.0 && angle2 > 0.0 && angle3 > 0.0) -> 0
@@ -176,5 +176,4 @@ fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
 	val lenth = mini - maxi
 	return if (lenth >= 0) lenth
 	else -1
-
 }

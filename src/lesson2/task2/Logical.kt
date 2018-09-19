@@ -38,10 +38,9 @@ fun sumTwoDigit(twoDigits: Int): Int =
  * Определить, угрожают ли они друг другу. Вернуть true, если угрожают.
  * Считать, что ферзи не могут загораживать друг друга.
  */
-fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
-	val ans = rookOrBishopThreatens(x1, y1, x2, y2, x2, y2)
-	return ans != 0
-}
+fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean =
+		rookOrBishopThreatens(x1, y1, x2, y2, x2, y2) != 0
+
 
 /**
  * Простая
@@ -49,14 +48,15 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
  * Дан номер месяца (от 1 до 12 включительно) и год (положительный).
  * Вернуть число дней в этом месяце этого года по григорианскому календарю.
  */
-fun daysInMonth(month: Int, year: Int): Int {
-	if (month != 2)
-		return when {
+fun daysInMonth(month: Int, year: Int): Int = when {
+	(month != 2) ->
+		when {
 			(month in 1..7 && month % 2 == 1) -> 31
 			(month in 8..12 && month % 2 == 0) -> 31
 			else -> 30
-		} else if (leapYear(year)) return 29
-	else return 28
+		}
+	(leapYear(year)) -> 29
+	else -> 28
 }
 
 fun leapYear(year: Int): Boolean =
@@ -70,12 +70,9 @@ fun leapYear(year: Int): Boolean =
  * Вернуть true, если утверждение верно
  */
 fun circleInside(x1: Double, y1: Double, r1: Double,
-				 x2: Double, y2: Double, r2: Double): Boolean {
+				 x2: Double, y2: Double, r2: Double): Boolean =
+		sqrt(sqr(x1 - x2) + sqr(y1 - y2)) + r1 <= r2
 
-	val lenth = sqrt(sqr(x1 - x2) + sqr(y1 - y2)) + r1
-	if (lenth <= r2) return true
-	else return false
-}
 
 /**
  * Средняя
