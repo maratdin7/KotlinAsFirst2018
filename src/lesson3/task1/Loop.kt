@@ -201,10 +201,10 @@ fun collatzSteps(x: Int): Int = when {
  * sin(x) = x - x^3 / 3! + x^5 / 5! - x^7 / 7! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun sin(x: Double, eps: Double): Double =TODO()
+fun sin(x: Double, eps: Double): Double = TODO()
 
 
-fun parity(i:Int) : Int =if (i%2==0) -1 else 1
+fun parity(i: Int): Int = if (i % 2 == 0) -1 else 1
 
 /**
  * Средняя
