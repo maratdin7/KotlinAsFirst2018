@@ -202,27 +202,8 @@ fun collatzSteps(x: Int): Int = when {
  * sin(x) = x - x^3 / 3! + x^5 / 5! - x^7 / 7! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun sin(x: Double, eps: Double): Double {
-	var now: Double = 1.0
-	var sinX = 0.0
-	var xNew = x
-	if (x < 0) {
-		now = -1.0
-		xNew = -x
-	}
-	while (xNew > 2 * PI) xNew -= 2 * PI
-	xNew *= now
-	now = xNew
-	val sqrX = sqr(xNew)
-	for (i in 1..Int.MAX_VALUE step 2) {
-		if (abs(now) >= eps) {
-			if (i != 1) now = -1 * now * (sqrX / (i * (i - 1)))
-			sinX += now
-		} else break
-	}
-	return sinX
-}
-
+fun sin(x: Double, eps: Double): Double =
+		sinAndCos(x, eps, { xNew: Double -> xNew }, { -> 1 })
 
 /**
  * Средняя
@@ -231,7 +212,35 @@ fun sin(x: Double, eps: Double): Double {
  * cos(x) = 1 - x^2 / 2! + x^4 / 4! - x^6 / 6! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun cos(x: Double, eps: Double): Double = TODO()
+fun cos(x: Double, eps: Double): Double =
+		sinAndCos(x, eps, { xNew: Double -> 1.0 }, { -> 0 })
+
+fun sinAndCos(x: Double, eps: Double, valNow: (Double) -> Double, border: () -> Int): Double {
+	var xNew = normalAngle(x)
+	var now = valNow(xNew) // выбор начального значения
+	val leftBorder = border() //выбор левой границы
+	val sqrX = sqr(xNew)
+	var result = 0.0
+	for (i in leftBorder..Int.MAX_VALUE step 2) {
+		if (abs(now) >= eps) {
+			if (i != leftBorder) now = -1 * now * (sqrX / (i * (i - 1)))
+			result += now
+		} else break
+	}
+	return result
+}
+
+fun normalAngle(x: Double): Double {
+	var sign = 1
+	var xNew = x
+	if (x < 0) {
+		sign = -1
+		xNew = -x
+	}
+	while (xNew > 2 * PI) xNew -= 2 * PI
+	xNew *= sign
+	return xNew
+}
 
 /**
  * Средняя
