@@ -101,8 +101,8 @@ class Tests {
         assertEquals(2022222222, lcm(1011111111, 2))
     }
     @Test
-    fun Nod() {
-        assertEquals(10, Nod(10, 10))
+    fun nod() {
+        assertEquals(10, nod(10, 10))
     }
     @Test
     @Tag("Easy")
@@ -182,6 +182,7 @@ class Tests {
         assertEquals(0.0, sin(100 * PI, 1e-5), 1e-5)
     }
 
+    }
     @Test
     @Tag("Normal")
     fun cos() {
@@ -243,4 +244,3 @@ class Tests {
         assertEquals(5, fibSequenceDigit(14))
         assertEquals(2, fibSequenceDigit(20))
     }
-}

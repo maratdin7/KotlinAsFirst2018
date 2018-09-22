@@ -3,6 +3,7 @@
 package lesson3.task1
 
 import lesson1.task1.sqr
+import java.lang.Math.PI
 import java.lang.Math.pow
 import kotlin.math.abs
 import kotlin.math.sqrt
@@ -108,10 +109,10 @@ fun fib(n: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int =
-		m * n / Nod(m, n)
+		m * n / nod(m, n)
 
 
-fun Nod(m: Int, n: Int): Int {
+fun nod(m: Int, n: Int): Int {
 	var temp: Int
 	var max = m
 	var min = n
@@ -155,7 +156,7 @@ fun maxDivisor(n: Int): Int =
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean = Nod(m, n) == 1
+fun isCoPrime(m: Int, n: Int): Boolean = nod(m, n) == 1
 
 /**
  * Простая
@@ -201,10 +202,33 @@ fun collatzSteps(x: Int): Int = when {
  * sin(x) = x - x^3 / 3! + x^5 / 5! - x^7 / 7! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun sin(x: Double, eps: Double): Double = TODO()
+fun sin(x: Double, eps: Double): Double {
+	var now: Double = 1.0
+	var sinX = 0.0
+	var j = 1
+	var xNew = x
 
+	if (x < 0) {
+		now = -1.0
+		xNew = -x
+	}
 
-fun parity(i: Int): Int = if (i % 2 == 0) -1 else 1
+	while (xNew > 2 * PI) xNew -= 2 * PI
+
+	xNew *= now
+	now = xNew
+	val sqrX = sqr(xNew)
+
+	for (i in 1..Int.MAX_VALUE) {
+		if (abs(now) >= eps) {
+			j = (2 * i) - 1
+			if (i != 1) now = -1 * now * (sqrX / (j * (j - 1)))
+			sinX += now
+		} else break
+	}
+	return sinX
+}
+
 
 /**
  * Средняя
