@@ -205,24 +205,18 @@ fun collatzSteps(x: Int): Int = when {
 fun sin(x: Double, eps: Double): Double {
 	var now: Double = 1.0
 	var sinX = 0.0
-	var j = 1
 	var xNew = x
-
 	if (x < 0) {
 		now = -1.0
 		xNew = -x
 	}
-
 	while (xNew > 2 * PI) xNew -= 2 * PI
-
 	xNew *= now
 	now = xNew
 	val sqrX = sqr(xNew)
-
-	for (i in 1..Int.MAX_VALUE) {
+	for (i in 1..Int.MAX_VALUE step 2) {
 		if (abs(now) >= eps) {
-			j = (2 * i) - 1
-			if (i != 1) now = -1 * now * (sqrX / (j * (j - 1)))
+			if (i != 1) now = -1 * now * (sqrX / (i * (i - 1)))
 			sinX += now
 		} else break
 	}
@@ -278,7 +272,7 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = sequence(n, true)
+fun squareSequenceDigit(n: Int): Int = sequence(n, { i: Int -> sqr(i) })
 
 /**
  * Сложная
@@ -289,19 +283,18 @@ fun squareSequenceDigit(n: Int): Int = sequence(n, true)
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = sequence(n, false)
+fun fibSequenceDigit(n: Int): Int = sequence(n, { i: Int -> fib(i) })
 
 
-fun sequence(n: Int, typeTask: Boolean): Int { //функция нахождения нужного числа в последовательности
+fun sequence(n: Int, typeTask: (Int) -> Int): Int { //функция нахождения нужного числа в последовательности
 	var nowLenth = 0        //длинна до числа now_numb^2(вкл)
 	var nowNumb = 0
 	var realNumb = 0
 	while (nowLenth < n) { //поиск длинны, в которой есть n
 		++nowNumb
-		realNumb = if (typeTask) sqr(nowNumb) else fib(nowNumb) //Выбор числа в зависимости от задачи(true-квадрат false-фибоначи)
+		realNumb = typeTask(nowNumb) //Выбор числа в зависимости от лямбда функции переданной задачей
 		nowLenth += digitNumber(realNumb) //Длинна на данный момент
 	}
-
 	var itemDigit = nowLenth - n
 	return digitItemUnderNumb(realNumb, itemDigit) //item_digit меньше, чтобы сделать сдвиг
 }
