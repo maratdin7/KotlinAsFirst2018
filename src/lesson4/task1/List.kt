@@ -219,7 +219,16 @@ fun convertToString(n: Int, base: Int): String = TODO()
  * из системы счисления с основанием base в десятичную.
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
-fun decimal(digits: List<Int>, base: Int): Int = TODO()
+fun decimal(digits: List<Int>, base: Int): Int {
+	var ans=0
+	var powBase=1
+	for (i in digits.size-1 downTo 0) {
+		ans+=digits[i]*powBase
+		powBase*=base
+	}
+	return ans
+}
+
 
 /**
  * Сложная
@@ -230,8 +239,30 @@ fun decimal(digits: List<Int>, base: Int): Int = TODO()
  * 10 -> a, 11 -> b, 12 -> c и так далее.
  * Например: str = "13c", base = 14 -> 250
  */
-fun decimalFromString(str: String, base: Int): Int = TODO()
+fun decimalFromString(str: String, base: Int): Int {
+	val alp=alphabet(base)
+	val normalNumb=normalNumber(str,alp)
+	return decimal(normalNumb,base)
+}
 
+// составляем алфавит для системы счисления с осн base
+fun alphabet(base: Int): MutableList<Char> {
+	var alp = mutableListOf<Char>()
+	var char: Char
+	for (i in 0 until base) {
+		if (i < 10) char = (48 + i ).toChar()
+		else char = (87 + i).toChar() // тк 97 код "а", и 10 итераций мы уже прошли
+		alp.add(char)
+	}
+	return alp
+}
+
+// переводим цифры к 10тичным числам
+fun normalNumber(str: String, list: MutableList<Char>): MutableList<Int> {
+	var norm= mutableListOf<Int>()
+	for (i in str) norm.add(list.indexOf(i))
+	return norm
+}
 /**
  * Сложная
  *
