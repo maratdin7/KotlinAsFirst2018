@@ -200,7 +200,15 @@ fun factorizeToString(n: Int): String = TODO()
  * Результат перевода вернуть в виде списка цифр в base-ичной системе от старшей к младшей,
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
-fun convert(n: Int, base: Int): List<Int> = TODO()
+fun convert(n: Int, base: Int): List<Int> {
+	var numb = n
+	var digit = mutableListOf<Int>()
+	do {
+		digit.add(numb % base)
+		numb /= base
+	} while (numb != 0)
+	return digit.reversed()
+}
 
 /**
  * Сложная
@@ -210,7 +218,14 @@ fun convert(n: Int, base: Int): List<Int> = TODO()
  * строчными буквами: 10 -> a, 11 -> b, 12 -> c и так далее.
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
-fun convertToString(n: Int, base: Int): String = TODO()
+fun convertToString(n: Int, base: Int): String {
+	var numb = n
+	var ans = ""
+	val digit = convert(n, base)
+	val alp = alphabet(base)
+	for (i in digit) ans += alp[i]
+	return ans
+}
 
 /**
  * Средняя
@@ -220,11 +235,11 @@ fun convertToString(n: Int, base: Int): String = TODO()
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
 fun decimal(digits: List<Int>, base: Int): Int {
-	var ans=0
-	var powBase=1
-	for (i in digits.size-1 downTo 0) {
-		ans+=digits[i]*powBase
-		powBase*=base
+	var ans = 0
+	var powBase = 1
+	for (i in digits.size - 1 downTo 0) {
+		ans += digits[i] * powBase
+		powBase *= base
 	}
 	return ans
 }
@@ -240,9 +255,9 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * Например: str = "13c", base = 14 -> 250
  */
 fun decimalFromString(str: String, base: Int): Int {
-	val alp=alphabet(base)
-	val normalNumb=normalNumber(str,alp)
-	return decimal(normalNumb,base)
+	val alp = alphabet(base)
+	val normalNumb = normalNumber(str, alp)
+	return decimal(normalNumb, base)
 }
 
 // составляем алфавит для системы счисления с осн base
@@ -250,7 +265,7 @@ fun alphabet(base: Int): MutableList<Char> {
 	var alp = mutableListOf<Char>()
 	var char: Char
 	for (i in 0 until base) {
-		if (i < 10) char = (48 + i ).toChar()
+		if (i < 10) char = (48 + i).toChar()
 		else char = (87 + i).toChar() // тк 97 код "а", и 10 итераций мы уже прошли
 		alp.add(char)
 	}
@@ -259,10 +274,11 @@ fun alphabet(base: Int): MutableList<Char> {
 
 // переводим цифры к 10тичным числам
 fun normalNumber(str: String, list: MutableList<Char>): MutableList<Int> {
-	var norm= mutableListOf<Int>()
+	var norm = mutableListOf<Int>()
 	for (i in str) norm.add(list.indexOf(i))
 	return norm
 }
+
 /**
  * Сложная
  *
