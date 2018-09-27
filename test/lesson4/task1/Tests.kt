@@ -213,11 +213,6 @@ class Tests {
     }
 
     @Test
-    fun alphabet() {
-        assertEquals(1, alphabet(16))
-    }
-
-    @Test
     @Tag("Hard")
     fun roman() {
         assertEquals("I", roman(1))
