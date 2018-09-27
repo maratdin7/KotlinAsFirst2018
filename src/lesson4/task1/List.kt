@@ -3,6 +3,7 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
+import lesson1.task1.sqr
 import kotlin.math.sqrt
 
 /**
@@ -11,15 +12,15 @@ import kotlin.math.sqrt
  * Найти все корни уравнения x^2 = y
  */
 fun sqRoots(y: Double) =
-        when {
-            y < 0 -> listOf()
-            y == 0.0 -> listOf(0.0)
-            else -> {
-                val root = sqrt(y)
-                // Результат!
-                listOf(-root, root)
-            }
-        }
+		when {
+			y < 0 -> listOf()
+			y == 0.0 -> listOf(0.0)
+			else -> {
+				val root = sqrt(y)
+				// Результат!
+				listOf(-root, root)
+			}
+		}
 
 /**
  * Пример
@@ -28,16 +29,16 @@ fun sqRoots(y: Double) =
  * Вернуть список корней (пустой, если корней нет)
  */
 fun biRoots(a: Double, b: Double, c: Double): List<Double> {
-    if (a == 0.0) {
-        return if (b == 0.0) listOf()
-        else sqRoots(-c / b)
-    }
-    val d = discriminant(a, b, c)
-    if (d < 0.0) return listOf()
-    if (d == 0.0) return sqRoots(-b / (2 * a))
-    val y1 = (-b + sqrt(d)) / (2 * a)
-    val y2 = (-b - sqrt(d)) / (2 * a)
-    return sqRoots(y1) + sqRoots(y2)
+	if (a == 0.0) {
+		return if (b == 0.0) listOf()
+		else sqRoots(-c / b)
+	}
+	val d = discriminant(a, b, c)
+	if (d < 0.0) return listOf()
+	if (d == 0.0) return sqRoots(-b / (2 * a))
+	val y1 = (-b + sqrt(d)) / (2 * a)
+	val y2 = (-b - sqrt(d)) / (2 * a)
+	return sqRoots(y1) + sqRoots(y2)
 }
 
 /**
@@ -46,13 +47,13 @@ fun biRoots(a: Double, b: Double, c: Double): List<Double> {
  * Выделить в список отрицательные элементы из заданного списка
  */
 fun negativeList(list: List<Int>): List<Int> {
-    val result = mutableListOf<Int>()
-    for (element in list) {
-        if (element < 0) {
-            result.add(element)
-        }
-    }
-    return result
+	val result = mutableListOf<Int>()
+	for (element in list) {
+		if (element < 0) {
+			result.add(element)
+		}
+	}
+	return result
 }
 
 /**
@@ -61,12 +62,12 @@ fun negativeList(list: List<Int>): List<Int> {
  * Изменить знак для всех положительных элементов списка
  */
 fun invertPositives(list: MutableList<Int>) {
-    for (i in 0 until list.size) {
-        val element = list[i]
-        if (element > 0) {
-            list[i] = -element
-        }
-    }
+	for (i in 0 until list.size) {
+		val element = list[i]
+		if (element > 0) {
+			list[i] = -element
+		}
+	}
 }
 
 /**
@@ -93,11 +94,11 @@ fun squares(vararg array: Int) = squares(array.toList()).toTypedArray()
  * "А роза упала на лапу Азора" является палиндромом.
  */
 fun isPalindrome(str: String): Boolean {
-    val lowerCase = str.toLowerCase().filter { it != ' ' }
-    for (i in 0..lowerCase.length / 2) {
-        if (lowerCase[i] != lowerCase[lowerCase.length - i - 1]) return false
-    }
-    return true
+	val lowerCase = str.toLowerCase().filter { it != ' ' }
+	for (i in 0..lowerCase.length / 2) {
+		if (lowerCase[i] != lowerCase[lowerCase.length - i - 1]) return false
+	}
+	return true
 }
 
 /**
@@ -115,14 +116,17 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  * по формуле abs = sqrt(a1^2 + a2^2 + ... + aN^2).
  * Модуль пустого вектора считать равным 0.0.
  */
-fun abs(v: List<Double>): Double = TODO()
+fun abs(v: List<Double>): Double =
+		sqrt(v.map({ sqr(it) }).sum()) //map преобразует элементы списка. возращает корень из сумм всех эл. list
 
 /**
  * Простая
  *
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
-fun mean(list: List<Double>): Double = TODO()
+fun mean(list: List<Double>): Double =
+		if (list.isNotEmpty()) list.sum() / list.size
+		else 0.0
 
 /**
  * Средняя
@@ -132,7 +136,13 @@ fun mean(list: List<Double>): Double = TODO()
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun center(list: MutableList<Double>): MutableList<Double> = TODO()
+fun center(list: MutableList<Double>): MutableList<Double> {
+	val average = mean(list)
+	for (i in 0 until list.size) {
+		list[i] -= average
+	}
+	return list
+}
 
 /**
  * Средняя
@@ -239,4 +249,110 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun test(n: Int): String {
+	for (i in 1..999999) {
+		println(russian(i))
+	}
+	return russian(n)
+}
+
+fun russian(n: Int): String {
+	val digitsNumber = digitOfNumber(n)
+
+	while (digitsNumber.size < 6) digitsNumber.add(0)
+
+	var numbRus = hundredInRussian(digitsNumber[5], digitsNumber[4], digitsNumber[3])
+
+	if (numbRus.isNotEmpty()) numbRus = thousand(numbRus, digitsNumber[4], digitsNumber[3])
+	numbRus += hundredInRussian(digitsNumber[2], digitsNumber[1], digitsNumber[0])
+
+	return space(numbRus)
+}
+
+
+// для цифр
+fun digitInRussian(digit: Int): String =
+		when (digit) {
+			1 -> " один"
+			2 -> " два"
+			3 -> " три"
+			4 -> " четыре"
+			5 -> " пять"
+			6 -> " шесть"
+			7 -> " семь"
+			8 -> " восемь"
+			9 -> " девять"
+			else -> ""
+		}
+
+fun dickerInRussian(dicker: Int, digit: Int): String {
+	val dig = digitInRussian(digit)
+	val d = digitInRussian(dicker)
+	return when {
+		dicker == 1 && digit != 0 -> when {
+			digit >= 4 -> dig.substring(0, dig.length - 1) + "надцать"
+			digit == 2 -> " двенадцать"
+			digit < 4 -> dig + "надцать"
+			else -> ""
+		}
+		dicker == 0 -> dig
+		dicker == 1 -> " десять"
+		dicker <= 3 -> d + "дцать" + dig
+		dicker == 4 -> " сорок" + dig
+		dicker == 9 -> " девяносто" + dig
+		dicker > 4 -> d + "десят" + dig
+		else -> ""
+	}
+}
+
+fun hundredInRussian(hundred: Int, dicker: Int, digit: Int): String {
+	val hund = digitInRussian(hundred)
+	val doub = dickerInRussian(dicker, digit)
+	return when {
+		hundred == 0 -> doub
+		hundred == 1 -> " сто" + doub
+		hundred == 2 -> " двести" + doub
+		hundred <= 4 -> hund + "ста" + doub
+		hundred > 4 -> hund + "сот" + doub
+		else -> ""
+	}
+}
+//конец обработки 3_значных чисел
+
+//для добавления тысяч
+fun thousand(str: String, dicker: Int, digit: Int): String =
+		when {
+			dicker == 1 || digit > 4 || digit == 0 -> str + " тысяч"
+			digit == 1 -> str.substringBeforeLast(' ') + " одна тысяча"
+			digit == 2 -> str.substringBeforeLast(' ') + " две тысячи"
+			digit <= 4 -> str + " тысячи"
+			else -> ""
+		}
+
+
+//разбиение числа на цифры и заполнение массива
+fun digitOfNumber(n: Int): MutableList<Int> {
+	var numb = n
+	val list = mutableListOf<Int>()
+	while (numb != 0) {
+		list.add(numb % 10)
+		numb /= 10
+	}
+	return list
+}
+
+// удаление лишних пробелов
+fun space(s: String): String {
+	var str = s
+	var length = str.length
+	val list = (1 until length).filterNot() { str[it] == ' ' && str[it - 1] == ' ' }
+	return removeAt(list, str).trim()
+}
+
+fun removeAt(list: List<Int>, str: String): String {
+	var s: String = "" + str[0]
+	for (i in list) {
+		s += str[i]
+	}
+	return s
+}

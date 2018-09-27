@@ -281,7 +281,7 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = sequence(n, { i: Int -> sqr(i) })
+fun squareSequenceDigit(n: Int): Int = sequence(n) { i: Int -> sqr(i) }
 
 /**
  * Сложная
@@ -292,7 +292,7 @@ fun squareSequenceDigit(n: Int): Int = sequence(n, { i: Int -> sqr(i) })
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = sequence(n, { i: Int -> fib(i) })
+fun fibSequenceDigit(n: Int): Int = sequence(n) { i: Int -> fib(i) }
 
 
 fun sequence(n: Int, typeTask: (Int) -> Int): Int { //функция нахождения нужного числа в последовательности
