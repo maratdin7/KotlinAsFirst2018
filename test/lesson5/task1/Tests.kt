@@ -201,9 +201,10 @@ class Tests {
     fun propagateHandshakes() {
         assertEquals(
                 mapOf(
+                        "Mikhail" to setOf(),
                         "Marat" to setOf("Mikhail", "Sveta"),
-                        "Sveta" to setOf("Mikhail"),
-                        "Mikhail" to setOf()
+                        "Sveta" to setOf("Mikhail")
+
                 ),
                 propagateHandshakes(
                         mapOf(
@@ -302,17 +303,25 @@ class Tests {
         )
         assertEquals(
                 Pair(0, 2),
-                findSumOfTwo(listOf(1, 2, 3), 4)
+                findSumOfTwo(listOf(3, 2, 1), 4)
         )
         assertEquals(
-                Pair(-1, -1),
-                findSumOfTwo(listOf(1, 2, 3), 6)
+                Pair(1, 2),
+                findSumOfTwo(listOf(1, 3, 3), 6)
         )
     }
 
     @Test
     @Tag("Impossible")
     fun bagPacking() {
+        assertEquals(
+                setOf("b1","c1") ,
+                bagPacking(myTests(mapOf(
+                        "a" to Triple(50, 1, 2),
+                        "b" to Triple(1, 1, 3),
+                        "c" to Triple(1, 100, 101))),
+                        101)
+        )
         assertEquals(
                 setOf("Кубок"),
                 bagPacking(
@@ -327,7 +336,23 @@ class Tests {
                         450
                 )
         )
+        assertEquals(
+             setOf("a50","b1") ,
+        bagPacking(myTests(mapOf(
+                "a" to Triple(50, 1, 2),
+                "b" to Triple(1, 100, 101))),
+                101)
+        )
     }
 
+    fun myTests(testMaker: Map<String,Triple<Int,Int,Int>>) :Map<String,Pair<Int,Int>>{ //map[quantity]=Pair(weight,price)
+        var testMap= mutableMapOf<String,Pair<Int,Int>>()
+        for ((quantity,options) in testMaker) {
+            for (i in 1..options.first) {
+                testMap[quantity+i]=Pair(options.second,options.third)
+            }
+        }
+        return testMap
+    }
     // TODO: map task tests
 }

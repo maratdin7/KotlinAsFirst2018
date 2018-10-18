@@ -6,6 +6,7 @@ import lesson1.task1.sqr
 import java.lang.Math.PI
 import java.lang.Math.pow
 import kotlin.math.abs
+import kotlin.math.floor
 import kotlin.math.sqrt
 
 /**
@@ -74,15 +75,13 @@ fun digitCountInNumber(n: Int, m: Int): Int =
 fun digitNumber(n: Int): Int {
 	var numb = abs(n) //если n<0
 	var i = 0
-	return if (numb == 0) 1
-	else {
-		while (numb > 0) {
-			numb /= 10
-			i++
-		}
-		i
-	}
+	do {
+		numb /= 10
+		i++
+	}while (numb > 0)
+	return i
 }
+
 
 /**
  * Простая
@@ -95,8 +94,8 @@ fun fib(n: Int): Int {
 	var leftLeftFib = 0
 	var numbFib = 1
 	for (i in 2..n) {
-		numbFib = leftFib + leftLeftFib //нахождение очередного числа фибоначи
-		leftLeftFib = leftFib //сдвиг элементов
+		numbFib = leftFib + leftLeftFib
+		leftLeftFib = leftFib
 		leftFib = numbFib
 	}
 	return numbFib
@@ -230,17 +229,8 @@ fun sinAndCos(x: Double, eps: Double, valNow: (Double) -> Double, border: () -> 
 	return result
 }
 
-fun normalAngle(x: Double): Double {
-	var sign = 1
-	var xNew = x
-	if (x < 0) {
-		sign = -1
-		xNew = -x
-	}
-	while (xNew > 2 * PI) xNew -= 2 * PI
-	xNew *= sign
-	return xNew
-}
+fun normalAngle(x: Double): Double =
+	 x-2*PI*floor(x/(2*PI))
 
 /**
  * Средняя
@@ -296,15 +286,15 @@ fun fibSequenceDigit(n: Int): Int = sequence(n) { i: Int -> fib(i) }
 
 
 fun sequence(n: Int, typeTask: (Int) -> Int): Int { //функция нахождения нужного числа в последовательности
-	var nowLenth = 0        //длинна до числа now_numb^2(вкл)
+	var nowLength = 0        //длинна до числа now_numb^2(вкл)
 	var nowNumb = 0
 	var realNumb = 0
-	while (nowLenth < n) { //поиск длинны, в которой есть n
+	while (nowLength < n) { //поиск длинны, в которой есть n
 		++nowNumb
 		realNumb = typeTask(nowNumb) //Выбор числа в зависимости от лямбда функции переданной задачей
-		nowLenth += digitNumber(realNumb) //Длинна на данный момент
+		nowLength += digitNumber(realNumb) //Длинна на данный момент
 	}
-	var itemDigit = nowLenth - n
+	var itemDigit = nowLength - n
 	return digitItemUnderNumb(realNumb, itemDigit) //item_digit меньше, чтобы сделать сдвиг
 }
 

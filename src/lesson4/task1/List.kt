@@ -117,7 +117,7 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  * Модуль пустого вектора считать равным 0.0.
  */
 fun abs(v: List<Double>): Double =
-		sqrt(v.map({ sqr(it) }).sum()) //map преобразует элементы списка. возращает корень из сумм всех эл. list
+		sqrt(v.map { sqr(it) }.sum()) //map преобразует элементы списка. возращает корень из сумм всех эл. list
 
 /**
  * Простая
@@ -125,8 +125,8 @@ fun abs(v: List<Double>): Double =
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
 fun mean(list: List<Double>): Double =
-		if (list.isNotEmpty()) list.sum() / list.size
-		else 0.0
+		if (list.isEmpty()) 0.0
+		else list.sum() / list.size
 
 /**
  * Средняя
@@ -265,8 +265,8 @@ fun alphabet(base: Int): MutableList<Char> {
 	var alp = mutableListOf<Char>()
 	var char: Char
 	for (i in 0 until base) {
-		if (i < 10) char = (48 + i).toChar()
-		else char = (87 + i).toChar() // тк 97 код "а", и 10 итераций мы уже прошли
+		if (i < 10) char = ('0'+ i).toChar()
+		else char = ('a' + i-10).toChar() // тк 97 код "а", и 10 итераций мы уже прошли
 		alp.add(char)
 	}
 	return alp
@@ -296,12 +296,6 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun test(n: Int): String {
-	for (i in 1..999999) {
-		println(russian(i))
-	}
-	return russian(n)
-}
 
 fun russian(n: Int): String {
 	val digitsNumber = digitOfNumber(n)
