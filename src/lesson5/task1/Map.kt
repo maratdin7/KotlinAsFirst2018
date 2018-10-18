@@ -364,6 +364,8 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
 						max = Pair(nowPrice, pastBag.second + name)
 				}
 			}
+			if (weight[i-1].first>max.first)
+				max=Pair(weight[i-1].first, weight[i-1].second)
 		}
 		weight[i] = max
 	}

@@ -344,8 +344,8 @@ class Tests {
                 101)
         )
         assertEquals(
-                setOf("1","4") ,
-                bagPacking(mapOf("1" to (1 to 100), "2" to (2 to 1),"3" to (3 to 50),"4" to (4 to 10)),
+                setOf("4","3") ,
+                bagPacking(mapOf("1" to (1 to 10), "2" to (2 to 101),"3" to (3 to 151),"4" to (2 to 152)),
                         5))
     }
 
