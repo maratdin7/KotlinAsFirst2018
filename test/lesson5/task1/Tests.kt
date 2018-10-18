@@ -337,12 +337,16 @@ class Tests {
                 )
         )
         assertEquals(
-             setOf("a50","b1") ,
+             setOf("b1","a1") ,
         bagPacking(myTests(mapOf(
                 "a" to Triple(50, 1, 2),
                 "b" to Triple(1, 100, 101))),
                 101)
         )
+        assertEquals(
+                setOf("1","4") ,
+                bagPacking(mapOf("1" to (1 to 100), "2" to (2 to 1),"3" to (3 to 50),"4" to (4 to 10)),
+                        5))
     }
 
     fun myTests(testMaker: Map<String,Triple<Int,Int,Int>>) :Map<String,Pair<Int,Int>>{ //map[quantity]=Pair(weight,price)
