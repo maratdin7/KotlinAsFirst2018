@@ -2,6 +2,10 @@
 
 package lesson6.task1
 
+import kotlinx.html.InputType
+import lesson2.task2.daysInMonth
+import java.lang.Math.max
+
 /**
  * Пример
  *
@@ -9,13 +13,13 @@ package lesson6.task1
  * Разобрать эту строку и рассчитать количество секунд, прошедшее с начала дня.
  */
 fun timeStrToSeconds(str: String): Int {
-    val parts = str.split(":")
-    var result = 0
-    for (part in parts) {
-        val number = part.toInt()
-        result = result * 60 + number
-    }
-    return result
+	val parts = str.split(":")
+	var result = 0
+	for (part in parts) {
+		val number = part.toInt()
+		result = result * 60 + number
+	}
+	return result
 }
 
 /**
@@ -33,30 +37,28 @@ fun twoDigitStr(n: Int) = if (n in 0..9) "0$n" else "$n"
  * Вернуть текущее время в виде строки в формате "ЧЧ:ММ:СС".
  */
 fun timeSecondsToStr(seconds: Int): String {
-    val hour = seconds / 3600
-    val minute = (seconds % 3600) / 60
-    val second = seconds % 60
-    return String.format("%02d:%02d:%02d", hour, minute, second)
+	val hour = seconds / 3600
+	val minute = (seconds % 3600) / 60
+	val second = seconds % 60
+	return String.format("%02d:%02d:%02d", hour, minute, second)
 }
 
 /**
  * Пример: консольный ввод
  */
 fun main(args: Array<String>) {
-    println("Введите время в формате ЧЧ:ММ:СС")
-    val line = readLine()
-    if (line != null) {
-        val seconds = timeStrToSeconds(line)
-        if (seconds == -1) {
-            println("Введённая строка $line не соответствует формату ЧЧ:ММ:СС")
-        }
-        else {
-            println("Прошло секунд с начала суток: $seconds")
-        }
-    }
-    else {
-        println("Достигнут <конец файла> в процессе чтения строки. Программа прервана")
-    }
+	println("Введите время в формате ЧЧ:ММ:СС")
+	val line = readLine()
+	if (line != null) {
+		val seconds = timeStrToSeconds(line)
+		if (seconds == -1) {
+			println("Введённая строка $line не соответствует формату ЧЧ:ММ:СС")
+		} else {
+			println("Прошло секунд с начала суток: $seconds")
+		}
+	} else {
+		println("Достигнут <конец файла> в процессе чтения строки. Программа прервана")
+	}
 }
 
 
@@ -71,7 +73,14 @@ fun main(args: Array<String>) {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+	try {
+		val date = exeptionStr(str.split(" ").toMutableList())
+		return String.format("%02d.%02d.%02d", date[0], date[1], date[2])
+	} catch (e: NumberFormatException) {
+		return ""
+	}
+}
 
 /**
  * Средняя
@@ -83,7 +92,61 @@ fun dateStrToDigit(str: String): String = TODO()
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+	try {
+		val date = exeptionInt(digital.split(".").toMutableList())
+		return String.format("%s %s %s", date[0], date[1], date[2])
+
+	} catch (e: NumberFormatException) {
+		return ""
+	}
+}
+
+fun whichMonth(): List<String> = listOf(
+		"января",
+		"февраля",
+		"марта",
+		"апреля",
+		"мая",
+		"июня",
+		"июля",
+		"августа",
+		"сентября",
+		"октября",
+		"ноября",
+		"декабря"
+)
+
+
+fun exeptionStr(date: MutableList<String>): List<Int> {
+
+	if (date.size != 3) throw NumberFormatException()
+	val dateInt = dateInt(date)
+	dateInt[1] = ((whichMonth().indexOf(date[1])) + 1)
+
+
+	if (dayIn(dateInt)) return dateInt
+	throw NumberFormatException()
+}
+
+fun dateInt(date: MutableList<String>): MutableList<Int> {
+	val dateInt = mutableListOf<Int>()
+	dateInt.add(date[0].toInt())
+	dateInt.add(-2)
+	dateInt.add(date[2].toInt())
+	return dateInt
+}
+
+fun dayIn(day: MutableList<Int>): Boolean = day[0] in 1..daysInMonth(day[1], day[2]) && day[1] in 1..12
+
+fun exeptionInt(date: MutableList<String>): List<String> {
+	val dateInt = dateInt(date)
+	dateInt[1] = date[1].toInt()
+	if (date.size != 3 || !dayIn(dateInt)) throw NumberFormatException()
+	date[1] = whichMonth()[date[1].toInt() - 1]
+	date[0] = (date[0].toInt()).toString()
+	return date
+}
 
 /**
  * Средняя
@@ -121,7 +184,73 @@ fun bestLongJump(jumps: String): Int = TODO()
  * Прочитать строку и вернуть максимальную взятую высоту (230 в примере).
  * При нарушении формата входной строки вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+	try {
+		return numderInStr(
+				jumps,
+				{ -> 0 },
+				{ a: MutableList<String> -> high(a) },
+				{ -> throw NumberFormatException() }
+		)
+	} catch (e: NumberFormatException) {
+		return -1
+	}
+}
+
+fun high(a: MutableList<String>): String =
+		when {
+			(!(a[1].all { it == '+' || it == '%' || it == '-' })) -> throw NumberFormatException()
+			'+' in a[1] -> a[0]
+			else -> "0"
+		}
+
+fun numderInStr(
+		str: String,
+		taskType: () -> Int,
+		task: (MutableList<String>) -> String,
+		e: () -> Exception): Int {
+
+	val number = str.split(" ")
+	var ans = "0"
+	var n = taskType() //1=0 2=1
+	val a: MutableList<String>
+
+	if (n == 1) {
+		a = mutableListOf<String>("0", "+")
+	} else {
+		a = mutableListOf<String>()
+	}
+
+	for ((i, el) in number.withIndex()) {
+		val num = number(el)
+		when {
+			((i % 2 == 0 && !num) || (i % 2 == 1 && num)) -> e()
+			(n == 0) -> {
+				n++
+				a.add(el)
+			}
+			(n == 1) -> {
+				a.add(el)
+				n = 0
+				if (taskType() == 1) {
+					ans = task(a)
+					a.clear()
+					a.add(ans)
+				} else {
+					ans = max(ans.toInt(), task(a).toInt()).toString()
+					a.clear()
+				}
+			}
+			else -> {
+			}
+		}
+	}
+	if (n == 1) e()
+	return ans.toInt()
+}
+
+
+fun number(str: String): Boolean = str.all { it in '0'..'9' }
 
 /**
  * Сложная
@@ -134,6 +263,7 @@ fun bestHighJump(jumps: String): Int = TODO()
  */
 fun plusMinus(expression: String): Int = TODO()
 
+//fun numberInStr(str : String):
 /**
  * Сложная
  *
