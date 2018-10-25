@@ -78,10 +78,9 @@ fun digitNumber(n: Int): Int {
 	do {
 		numb /= 10
 		i++
-	}while (numb > 0)
+	} while (numb > 0)
 	return i
 }
-
 
 /**
  * Простая
@@ -112,12 +111,11 @@ fun lcm(m: Int, n: Int): Int =
 
 
 fun nod(m: Int, n: Int): Int {
-	var temp: Int
 	var max = m
 	var min = n
 	while (max != 0) {    //алгоритм Евклида
 		if (max < min) {
-			temp = max
+			val temp = max
 			max = min
 			min = temp
 		}
@@ -132,7 +130,7 @@ fun nod(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-	var maxDel = sqrtInt(n)
+	val maxDel = sqrtInt(n)
 	for (i in 2..maxDel) {
 		if (n % i == 0) return i
 	}
@@ -215,7 +213,7 @@ fun cos(x: Double, eps: Double): Double =
 		sinAndCos(x, eps, { xNew: Double -> 1.0 }, { -> 0 })
 
 fun sinAndCos(x: Double, eps: Double, valNow: (Double) -> Double, border: () -> Int): Double {
-	var xNew = normalAngle(x)
+	val xNew = normalAngle(x)
 	var now = valNow(xNew) // выбор начального значения
 	val leftBorder = border() //выбор левой границы
 	val sqrX = sqr(xNew)
@@ -230,7 +228,7 @@ fun sinAndCos(x: Double, eps: Double, valNow: (Double) -> Double, border: () -> 
 }
 
 fun normalAngle(x: Double): Double =
-	 x-2*PI*floor(x/(2*PI))
+		x - 2 * PI * floor(x / (2 * PI))
 
 /**
  * Средняя
@@ -294,7 +292,7 @@ fun sequence(n: Int, typeTask: (Int) -> Int): Int { //функция нахож�
 		realNumb = typeTask(nowNumb) //Выбор числа в зависимости от лямбда функции переданной задачей
 		nowLength += digitNumber(realNumb) //Длинна на данный момент
 	}
-	var itemDigit = nowLength - n
+	val itemDigit = nowLength - n
 	return digitItemUnderNumb(realNumb, itemDigit) //item_digit меньше, чтобы сделать сдвиг
 }
 
