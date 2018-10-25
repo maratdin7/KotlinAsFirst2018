@@ -199,7 +199,7 @@ fun bestHighJump(jumps: String): Int {
 
 fun high(a: MutableList<String>): String =
 		when {
-			(!(a[1].all { it == '+' || it == '%' || it == '-' })) -> throw NumberFormatException()
+			(a[1].all { it != '+' && it != '%' && it != '-' }) -> throw NumberFormatException()
 			'+' in a[1] -> a[0]
 			else -> "0"
 		}
@@ -261,9 +261,22 @@ fun number(str: String): Boolean = str.all { it in '0'..'9' }
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+	return numderInStr(
+			str = expression,
+			taskType = { -> 1 },
+			task = { a: MutableList<String> -> sum(a) },
+			e = {->throw IllegalArgumentException()}
+			)
+}
 
-//fun numberInStr(str : String):
+fun sum(a:MutableList<String>):String=
+		when {
+				(a[1]!="+" && a[1]!="-") -> throw IllegalArgumentException()
+				a[1]=="+" -> (a[0].toInt()+a[2].toInt()).toString()
+				a[1]=="-" -> (a[0].toInt()-a[2].toInt()).toString()
+				else -> "0"
+		}
 /**
  * Сложная
  *
