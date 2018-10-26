@@ -95,14 +95,15 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  *   ) -> mapOf("Emergency" to "112, 911", "Police" to "02")
  */
 fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
-	var mapC = mutableMapOf<String, String>()
+	val mapC = mutableMapOf<String, String>()
 	mapC.putAll(mapA)
-	for (i in mapB) {
-		var def = i.key
-		if (def in mapC && mapC[def] != i.value)
-			mapC[def] += ", ${i.value}"
+	for ((i, value) in mapB) {
+		val def = i
+		if (def in mapC && mapC[def] != value)
+			mapC[def] = mapC[def] + ", " + value
+		//когда было написано 	mapC[def] += ", "+value программа бросала исключение. Хотелось бы узнать почему?
 		else
-			mapC.put(i.key, i.value)
+			mapC.put(i, value)
 	}
 	return mapC
 }
@@ -118,7 +119,7 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *     -> mapOf(5 to listOf("Семён", "Михаил"), 3 to listOf("Марат"))
  */
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
-	var map = mutableMapOf<Int, List<String>>()
+	val map = mutableMapOf<Int, List<String>>()
 	for (i in grades) {
 		map[i.value] = map.getOrDefault(i.value, listOf()) + i.key
 	}
@@ -148,7 +149,11 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = TODO()
  *   averageStockPrice(listOf("MSFT" to 100.0, "MSFT" to 200.0, "NFLX" to 40.0))
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
-fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> = TODO()
+fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
+	val sale = mutableMapOf<String, Double>()
+	stockPrices.forEach { sale[it.first] = (sale.getOrDefault(it.first, it.second) + it.second) / 2 }
+	return sale
+}
 
 /**
  * Средняя
@@ -192,8 +197,8 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *        )
  */
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
-	var ans = mutableMapOf<String, Set<String>>()
-	var names = mutableSetOf<String>()
+	val ans = mutableMapOf<String, Set<String>>()
+	val names = mutableSetOf<String>()
 	for ((name, friend) in friends) { //чтобы найти все имена
 		names.addAll(friend)
 		names.add(name)
@@ -207,8 +212,8 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
 }
 
 fun personFriends(friends: Map<String, Set<String>>, name: String): Set<String> {
-	var faceControl = mutableSetOf(name)
-	var myFriends = mutableSetOf<String>()
+	val faceControl = mutableSetOf(name)
+	val myFriends = mutableSetOf<String>()
 	return whoseHands(friends, faceControl, myFriends, friends[name]!!)
 }
 
@@ -271,7 +276,14 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = TODO()
  * Например:
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
-fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
+fun canBuildFrom(chars: List<Char>, word: String): Boolean {
+	val letter = mutableMapOf<Char, Boolean>()
+	word.forEach { letter[it] = false }
+	chars.forEach {
+		if (letter[it] == false) letter[it] = true
+	}
+	return letter.all { it.value == true }
+}
 
 /**
  * Средняя
@@ -296,8 +308,17 @@ fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
  * Например:
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
-fun hasAnagrams(words: List<String>): Boolean = TODO()
+fun hasAnagrams(words: List<String>): Boolean {
+	val anagramm = mutableSetOf<List<Char>>()
+	for (i in words) {
+		val word = sorted(i)
+		if (word in anagramm) return true
+		else anagramm.add(word)
+	}
+	return false
+}
 
+fun sorted(str: String): List<Char> = str.toList().sorted()
 /**
  * Сложная
  *
@@ -346,33 +367,4 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
-	var weight = mutableListOf(Pair(0, setOf<String>()))
-	for (i in 1..capacity) {
-		weight.add(Pair(0, setOf<String>()))
-		var max: Pair<Int, Set<String>> = Pair(0, setOf())
-		loop@ for ((name, options) in treasures) {
-
-			when {
-				(i < options.first) -> continue@loop
-				(name in weight[i - options.first].second) -> continue@loop
-				// побоялся писать continue в одну строчку, потому что вдруг выйду за пределы [i-options.first]
-				else -> {
-					val pastBag = weight[i - options.first]
-					val nowPrice = pastBag.first + options.second
-					if (nowPrice > max.first)
-						max = Pair(nowPrice, pastBag.second + name)
-				}
-			}
-			if (weight[i-1].first>max.first)
-				max=Pair(weight[i-1].first, weight[i-1].second)
-		}
-		weight[i] = max
-	}
-	return weight[capacity].second
-}
-
-
-
-
-
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
