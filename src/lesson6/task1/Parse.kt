@@ -76,7 +76,7 @@ fun main(args: Array<String>) {
 fun dateStrToDigit(str: String): String {
 	try {
 		val date = exeptionStr(str.split(" ").toMutableList())
-		return String.format("%02d.%02d.%02d", date[0], date[1], date[2])
+		return String.format("%02d.%02d.%d", date[0], date[1], date[2])
 	} catch (e: NumberFormatException) {
 		return ""
 	}
@@ -199,11 +199,12 @@ fun bestHighJump(jumps: String): Int {
 
 fun high(a: MutableList<String>): String =
 		when {
-			(a[1].all { it != '+' && it != '%' && it != '-' }) -> throw NumberFormatException()
+			(a[1].any { it != '+' && it != '%' && it != '-' }) -> throw NumberFormatException()
 			'+' in a[1] -> a[0]
-			else -> "0"
+			else -> "-1"
 		}
 
+fun f(i: Int): Int = "-1".toInt()
 fun numderInStr(
 		str: String,
 		taskType: () -> Int,
@@ -211,7 +212,7 @@ fun numderInStr(
 		e: () -> Exception): Int {
 
 	val number = str.split(" ")
-	var ans = "0"
+	var ans = "-1"
 	var n = taskType() //1=0 2=1
 	val a: MutableList<String>
 
@@ -249,7 +250,6 @@ fun numderInStr(
 	return ans.toInt()
 }
 
-
 fun number(str: String): Boolean = str.all { it in '0'..'9' }
 
 /**
@@ -266,17 +266,17 @@ fun plusMinus(expression: String): Int {
 			str = expression,
 			taskType = { -> 1 },
 			task = { a: MutableList<String> -> sum(a) },
-			e = {->throw IllegalArgumentException()}
-			)
+			e = { -> throw IllegalArgumentException() }
+	)
 }
 
-fun sum(a:MutableList<String>):String=
+fun sum(a: MutableList<String>): String =
 		when {
-				(a[1]!="+" && a[1]!="-") -> throw IllegalArgumentException()
-				a[1]=="+" -> (a[0].toInt()+a[2].toInt()).toString()
-				a[1]=="-" -> (a[0].toInt()-a[2].toInt()).toString()
-				else -> "0"
+			a[1] == "+" -> (a[0].toInt() + a[2].toInt()).toString()
+			a[1] == "-" -> (a[0].toInt() - a[2].toInt()).toString()
+			else -> throw IllegalArgumentException()
 		}
+
 /**
  * Сложная
  *
