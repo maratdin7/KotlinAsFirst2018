@@ -2,6 +2,8 @@
 
 package lesson5.task1
 
+import java.lang.Math.max
+
 /**
  * Пример
  *
@@ -367,4 +369,43 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+	val a = mutableListOf<Int>()
+	for (i in 0..capacity) {
+		a.add(0)
+	}
+
+	val rucksack: MutableList<MutableList<Int>> = mutableListOf(a)
+	val name = mutableListOf<String>()
+
+	treasures.forEach { name.add(it.key) }
+
+	for (i in 1..treasures.size) {
+		rucksack.add(mutableListOf(0))
+		val jewel = treasures[name[i - 1]]!!
+
+		for (j in 1..capacity) {
+			when {
+				(jewel.first > j) -> rucksack[i].add(rucksack[i - 1][j])
+				else -> rucksack[i].add(max(rucksack[i - 1][j], rucksack[i - 1][j - jewel.first] + jewel.second))
+			}
+		}
+	}
+	var i = treasures.size
+	var j = capacity
+	val ans = mutableSetOf<String>()
+
+	while (i != 0 && j != 0) {
+		val jewel = treasures[name[i - 1]]!!
+
+		if (jewel.first <= j && (rucksack[i - 1][j] <= (rucksack[i - 1][j - jewel.first] + jewel.second))) {
+			ans.add(name[i - 1])
+			j -= jewel.first
+		}
+
+		i--
+	}
+	return ans
+}
+
+

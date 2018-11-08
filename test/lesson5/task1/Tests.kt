@@ -317,19 +317,23 @@ class Tests {
 	@Tag("Impossible")
 	fun bagPacking() {
 		assertEquals(
-				setOf("b1", "c1"),
-				bagPacking(myTests(mapOf(
-						"a" to Triple(50, 1, 2),
-						"b" to Triple(1, 1, 3),
-						"c" to Triple(1, 100, 101))),
-						101)
-		)
+				setOf("6"),
+				bagPacking(mapOf("1" to (1 to 5), "2" to (2 to 6), "3" to (1 to 10), "4" to (3 to 7),"5" to (1 to 8),"6" to (4 to 500)),
+						4))
 		assertEquals(
 				setOf("Кубок"),
 				bagPacking(
 						mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 5000)),
 						850
 				)
+		)
+		assertEquals(
+				setOf("b1", "c1"),
+		bagPacking(myTests(mapOf(
+				"a" to Triple(1, 1, 2),
+				"b" to Triple(1, 1, 3),
+				"c" to Triple(1, 100, 101))),
+				101)
 		)
 		assertEquals(
 				emptySet<String>(),
@@ -339,16 +343,13 @@ class Tests {
 				)
 		)
 		assertEquals(
-				setOf("b1", "a1"),
+				setOf("b1", "a50"),
 				bagPacking(myTests(mapOf(
 						"a" to Triple(50, 1, 2),
 						"b" to Triple(1, 100, 101))),
 						101)
 		)
-		assertEquals(
-				setOf("4", "3"),
-				bagPacking(mapOf("1" to (1 to 10), "2" to (2 to 101), "3" to (3 to 151), "4" to (2 to 152)),
-						5))
+
 	}
 
 	fun myTests(testMaker: Map<String, Triple<Int, Int, Int>>): Map<String, Pair<Int, Int>> { //map[quantity]=Pair(weight,price)

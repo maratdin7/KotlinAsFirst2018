@@ -205,6 +205,7 @@ fun high(a: MutableList<String>): String =
 		}
 
 fun f(i: Int): Int = "-1".toInt()
+
 fun numderInStr(
 		str: String,
 		taskType: () -> Int,
