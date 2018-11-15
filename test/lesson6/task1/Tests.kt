@@ -75,10 +75,7 @@ class Tests {
         assertEquals(-1, bestLongJump("700 + 700"))
 
     }
-    @Test
-    fun f() {
-        assertEquals(-1, f(1))
-    }
+
     @Test
     @Tag("Hard")
     fun bestHighJump() {

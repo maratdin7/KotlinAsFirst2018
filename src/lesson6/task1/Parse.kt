@@ -183,73 +183,26 @@ fun bestLongJump(jumps: String): Int = TODO()
  * При нарушении формата входной строки вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
+	val slice = jumps.split(" ")
+	var ans = -1
+	var high = 0
 	return try {
-		numderInStr(
-				jumps,
-				{ 0 },
-				{ a: MutableList<String> -> high(a) },
-				{ throw NumberFormatException() }
-		)
+		for ((i, element) in slice.withIndex()) {
+			when {
+				i % 2 == 0 && number(element) -> high = element.toInt()
+				i % 2 == 1 && element.spade() -> if ('+' in element) ans = max(ans, high)
+				else -> throw NumberFormatException()
+			}
+		}
+		ans
 	} catch (e: NumberFormatException) {
 		-1
 	}
 }
 
-fun high(a: MutableList<String>): String =
-		when {
-			(a[1].any { it != '+' && it != '%' && it != '-' }) -> throw NumberFormatException()
-			'+' in a[1] -> a[0]
-			else -> "-1"
-		}
+fun String.spade(): Boolean = this.isNotEmpty() && this.all { it == '+' || it == '-' || it == '%' }
 
-fun f(i: Int): Int = "-1".toInt()
-
-fun numderInStr(
-		str: String,
-		taskType: () -> Int,
-		task: (MutableList<String>) -> String,
-		e: () -> Exception): Int {
-
-	val number = str.split(" ")
-	var ans = "-1"
-	var n = taskType() //1=0 2=1
-	val a: MutableList<String>
-
-	a = if (n == 1) {
-		mutableListOf("0", "+")
-	} else {
-		mutableListOf()
-	}
-
-	for ((i, el) in number.withIndex()) {
-		val num = number(el)
-		when {
-			((i % 2 == 0 && !num) || (i % 2 == 1 && num)) -> e()
-			(n == 0) -> {
-				n++
-				a.add(el)
-			}
-			(n == 1) -> {
-				a.add(el)
-				n = 0
-				if (taskType() == 1) {
-					ans = task(a)
-					a.clear()
-					a.add(ans)
-				} else {
-					ans = max(ans.toInt(), task(a).toInt()).toString()
-					a.clear()
-				}
-			}
-			else -> {
-			}
-		}
-	}
-	if (n == 1) e()
-	return ans.toInt()
-}
-
-fun number(str: String): Boolean = str.all { it in '0'..'9' }
+fun number(str: String): Boolean = str.isNotEmpty() && str.all { it in '0'..'9' }
 
 /**
  * Сложная
@@ -260,22 +213,24 @@ fun number(str: String): Boolean = str.all { it in '0'..'9' }
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int =
-		try {
-			numderInStr(
-					str = expression,
-					taskType = { 1 },
-					task = { a: MutableList<String> -> sum(a) },
-					e = { throw IllegalArgumentException() })
-		} catch (e: Exception) {
-			throw IllegalArgumentException()
-		}
-
-
-fun sum(a: MutableList<String>): String =
+fun plusMinus(expression: String): Int {
+	val slice = expression.split(" ")
+	var ans = 0
+	var sign = "+"
+	for ((i, element) in slice.withIndex()) {
 		when {
-			a[1] == "+" -> (a[0].toInt() + a[2].toInt()).toString()
-			a[1] == "-" -> (a[0].toInt() - a[2].toInt()).toString()
+			i % 2 == 0 && number(element) -> ans = calculate(ans, element.toInt(), sign)
+			i % 2 == 1 -> sign = element
+			else -> throw IllegalArgumentException()
+		}
+	}
+	return ans
+}
+
+fun calculate(a: Int, b: Int, sign: String): Int =
+		when (sign) {
+			"+" -> a + b
+			"-" -> a - b
 			else -> throw IllegalArgumentException()
 		}
 
