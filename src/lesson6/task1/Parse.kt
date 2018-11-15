@@ -261,13 +261,15 @@ fun number(str: String): Boolean = str.all { it in '0'..'9' }
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int =
-		if (expression != "") numderInStr(
-				str = expression,
-				taskType = { 1 },
-				task = { a: MutableList<String> -> sum(a) },
-				e = { throw IllegalArgumentException() }
-		)
-		else throw IllegalArgumentException()
+		try {
+			numderInStr(
+					str = expression,
+					taskType = { 1 },
+					task = { a: MutableList<String> -> sum(a) },
+					e = { throw IllegalArgumentException() })
+		} catch (e: Exception) {
+			throw IllegalArgumentException()
+		}
 
 
 fun sum(a: MutableList<String>): String =

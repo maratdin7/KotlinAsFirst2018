@@ -98,7 +98,7 @@ class Tests {
         assertEquals(4, plusMinus("2 + 2"))
         assertEquals(6, plusMinus("2 + 31 - 40 + 13"))
         assertEquals(-1, plusMinus("0 - 1"))
-        assertThrows(IllegalArgumentException::class.java) { plusMinus("") }
+		assertThrows(IllegalArgumentException::class.java) { plusMinus("") }
         assertThrows(IllegalArgumentException::class.java) { plusMinus("2 + 4 + -0") }
         assertThrows(IllegalArgumentException::class.java) { plusMinus("4 * 2") }
         assertThrows(IllegalArgumentException::class.java) { plusMinus("4 -4 - - 12") }
@@ -154,10 +154,8 @@ class Tests {
 
     @Test
     fun iae() {
-        assertThrows(IllegalArgumentException::class.java) { iae("===") }
-        assertThrows(IllegalArgumentException::class.java) { iae( "+> +>[+>") }
-        assertThrows(IllegalArgumentException::class.java) { iae("][") }
-        assertEquals(mapOf(2 to 5, 9 to 12, 17 to 37, 23 to 25, 29 to 32),
-                iae("--[<-] >+[>+] >++[--< <[<] >+[>+] >++]"))
-    }
+		assertThrows(IllegalArgumentException::class.java) { iae("===") }
+		assertThrows(IllegalArgumentException::class.java) { iae("+> +>[+>") }
+		assertThrows(IllegalArgumentException::class.java) { iae("][") }
+	}
 }
