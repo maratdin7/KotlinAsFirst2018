@@ -200,7 +200,7 @@ fun collatzSteps(x: Int): Int = when {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun sin(x: Double, eps: Double): Double =
-		sinAndCos(x, eps, { xNew: Double -> xNew }, { -> 1 })
+		sinAndCos(x, eps, { xNew: Double -> xNew }, { 1 })
 
 /**
  * Средняя
@@ -210,7 +210,7 @@ fun sin(x: Double, eps: Double): Double =
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun cos(x: Double, eps: Double): Double =
-		sinAndCos(x, eps, { xNew: Double -> 1.0 }, { -> 0 })
+		sinAndCos(x, eps, { 1.0 }, { 0 })
 
 fun sinAndCos(x: Double, eps: Double, valNow: (Double) -> Double, border: () -> Int): Double {
 	val xNew = normalAngle(x)
@@ -220,15 +220,14 @@ fun sinAndCos(x: Double, eps: Double, valNow: (Double) -> Double, border: () -> 
 	var result = 0.0
 	for (i in leftBorder..Int.MAX_VALUE step 2) {
 		if (abs(now) >= eps) {
-			if (i != leftBorder) now = -1 * now * (sqrX / (i * (i - 1)))
+			if (i != leftBorder) now *= -1 * (sqrX / (i * (i - 1)))
 			result += now
 		} else break
 	}
 	return result
 }
 
-fun normalAngle(x: Double): Double =
-		x - 2 * PI * floor(x / (2 * PI))
+fun normalAngle(x: Double): Double = x % (2 * PI)
 
 /**
  * Средняя

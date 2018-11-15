@@ -100,12 +100,11 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
 	val mapC = mutableMapOf<String, String>()
 	mapC.putAll(mapA)
 	for ((i, value) in mapB) {
-		val def = i
-		if (def in mapC && mapC[def] != value)
-			mapC[def] = mapC[def] + ", " + value
+		if (i in mapC && mapC[i] != value)
+			mapC[i] = mapC[i] + ", " + value
 		//когда было написано 	mapC[def] += ", "+value программа бросала исключение. Хотелось бы узнать почему?
 		else
-			mapC.put(i, value)
+			mapC[i] = value
 	}
 	return mapC
 }
@@ -122,10 +121,10 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  */
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
 	val map = mutableMapOf<Int, List<String>>()
-	for (i in grades) {
-		map[i.value] = map.getOrDefault(i.value, listOf()) + i.key
+	for ((i, value) in grades) {
+		map.merge(value, listOf(i)) { list, str -> list + str }
 	}
-	for (i in map) map[i.key] = i.value.sortedDescending()
+	for ((i, value) in map) map[i] = value.sortedDescending()
 	return map
 }
 
@@ -152,9 +151,15 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = TODO()
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
-	val sale = mutableMapOf<String, Double>()
-	stockPrices.forEach { sale[it.first] = (sale.getOrDefault(it.first, it.second) + it.second) / 2 }
-	return sale
+	val sale = stockPrices.groupBy({ it.first }, { it.second })
+	val average = mutableMapOf<String, Double>()
+	for ((key, value) in sale) {
+		val s = value.size
+		average[key] = value.fold(0.0) { previousResult, el ->
+			previousResult + (el / s)
+		}
+	}
+	return average
 }
 
 /**
@@ -279,12 +284,12 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = TODO()
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
-	val letter = mutableMapOf<Char, Boolean>()
-	word.forEach { letter[it] = false }
-	chars.forEach {
-		if (letter[it] == false) letter[it] = true
-	}
-	return letter.all { it.value == true }
+	val alphabet = mutableSetOf<Char>()
+	val wordSet = mutableSetOf<Char>()
+
+	chars.forEach { alphabet.add(it.toLowerCase()) }
+	word.forEach { wordSet.add(it.toLowerCase()) }
+	return wordSet.all { it in alphabet }
 }
 
 /**
@@ -313,14 +318,14 @@ fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
 fun hasAnagrams(words: List<String>): Boolean {
 	val anagramm = mutableSetOf<List<Char>>()
 	for (i in words) {
-		val word = sorted(i)
+		val word = i.sorted()
 		if (word in anagramm) return true
 		else anagramm.add(word)
 	}
 	return false
 }
 
-fun sorted(str: String): List<Char> = str.toList().sorted()
+fun String.sorted() = this.toList().sorted()
 /**
  * Сложная
  *
@@ -339,13 +344,12 @@ fun sorted(str: String): List<Char> = str.toList().sorted()
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-	for (i in list) {
-		val first = list.indexOf(i)
-		val second = list.lastIndexOf(number - i)
-		val set = setOf(first, second)
-		if (set.size == 2 && (-1 !in set)) {
-			return Pair(set.first(), set.last())
-		}
+	val ans = mutableMapOf<Int, Int>()
+	for ((i, value) in list.withIndex()) {
+		val key = number - value
+		val a = ans[key]
+		if (a != null) return Pair(a, i)
+		else ans[value] = i
 	}
 	return Pair(-1, -1)
 }

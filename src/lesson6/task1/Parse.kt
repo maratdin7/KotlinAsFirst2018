@@ -2,7 +2,6 @@
 
 package lesson6.task1
 
-import kotlinx.html.InputType
 import lesson2.task2.daysInMonth
 import java.lang.Math.max
 
@@ -73,14 +72,13 @@ fun main(args: Array<String>) {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String {
-	try {
-		val date = exeptionStr(str.split(" ").toMutableList())
-		return String.format("%02d.%02d.%d", date[0], date[1], date[2])
-	} catch (e: NumberFormatException) {
-		return ""
-	}
+fun dateStrToDigit(str: String): String = try {
+	val date = exeptionStr(str.split(" ").toMutableList())
+	String.format("%02d.%02d.%d", date[0], date[1], date[2])
+} catch (e: NumberFormatException) {
+	""
 }
+
 
 /**
  * Средняя
@@ -93,12 +91,12 @@ fun dateStrToDigit(str: String): String {
  * входными данными.
  */
 fun dateDigitToStr(digital: String): String {
-	try {
+	return try {
 		val date = exeptionInt(digital.split(".").toMutableList())
-		return String.format("%s %s %s", date[0], date[1], date[2])
+		String.format("%s %s %s", date[0], date[1], date[2])
 
 	} catch (e: NumberFormatException) {
-		return ""
+		""
 	}
 }
 
@@ -185,15 +183,15 @@ fun bestLongJump(jumps: String): Int = TODO()
  * При нарушении формата входной строки вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
-	try {
-		return numderInStr(
+	return try {
+		numderInStr(
 				jumps,
-				{ -> 0 },
+				{ 0 },
 				{ a: MutableList<String> -> high(a) },
-				{ -> throw NumberFormatException() }
+				{ throw NumberFormatException() }
 		)
 	} catch (e: NumberFormatException) {
-		return -1
+		-1
 	}
 }
 
@@ -217,10 +215,10 @@ fun numderInStr(
 	var n = taskType() //1=0 2=1
 	val a: MutableList<String>
 
-	if (n == 1) {
-		a = mutableListOf<String>("0", "+")
+	a = if (n == 1) {
+		mutableListOf("0", "+")
 	} else {
-		a = mutableListOf<String>()
+		mutableListOf()
 	}
 
 	for ((i, el) in number.withIndex()) {
@@ -262,14 +260,15 @@ fun number(str: String): Boolean = str.all { it in '0'..'9' }
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int {
-	return numderInStr(
-			str = expression,
-			taskType = { -> 1 },
-			task = { a: MutableList<String> -> sum(a) },
-			e = { -> throw IllegalArgumentException() }
-	)
-}
+fun plusMinus(expression: String): Int =
+		if (expression != "") numderInStr(
+				str = expression,
+				taskType = { 1 },
+				task = { a: MutableList<String> -> sum(a) },
+				e = { throw IllegalArgumentException() }
+		)
+		else throw IllegalArgumentException()
+
 
 fun sum(a: MutableList<String>): String =
 		when {
@@ -351,4 +350,77 @@ fun fromRoman(roman: String): Int = TODO()
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+	val bracket = iae(commands)
+	val line = cellsList(cells)
+	val size = commands.length
+	var com = 0
+	var cell = cells / 2
+
+	for (i in 1..limit) {
+		if (com == size) return line
+		when (commands[com]) {
+			'<' -> cell = cell.leftOrRight(cells) { it - 1 }
+			'>' -> cell = cell.leftOrRight(cells) { it + 1 }
+			'+' -> line[cell]++
+			'-' -> line[cell]--
+			'[' -> com = bracketLeftOrRight(line[cell], com to bracket[com]!!, '[')   //!!
+			']' -> com = bracketLeftOrRight(line[cell], bracket[com]!! to com, ']')  //!!
+		}
+		com++
+	}
+	return line
+}
+
+fun cellsList(cells: Int): MutableList<Int> {
+	val list = mutableListOf<Int>()
+	for (i in 0 until cells) {
+		list.add(0)
+	}
+	return list
+}
+
+fun bracketLeftOrRight(number: Int, bracket: Pair<Int, Int>, bkt: Char): Int =
+		if (bkt == '[') {
+			if (number == 0) bracket.second
+			else bracket.first
+		} else {
+			if (number != 0) bracket.first
+			else bracket.second
+		}
+
+fun Int.leftOrRight(cells: Int, way: (Int) -> Int): Int { //<> и IllegalStateException
+	val ans = way(this)
+	if ((this > ans && ans < 0) || (this < ans && ans >= cells)) throw IllegalStateException()
+	return ans
+}
+
+fun iae(str: String): Map<Int, Int> {
+	val stack = mutableListOf<Int>()
+	val bracket = mutableMapOf<Int, Int>()
+	val comands = "<> +-"
+	for ((i, char) in str.withIndex()) {
+		when (char) {
+			'[' -> stack.add(i)
+			']' -> {
+				val a = stack.pop()
+				bracket[a] = i
+				bracket[i] = a
+			}
+			!in comands -> throw IllegalArgumentException()
+		}
+	}
+	if (stack.size != 0) throw IllegalArgumentException()
+	return bracket
+}
+
+
+// Я погуглил про Stack и почему то не нашел как его сделать
+
+fun MutableList<Int>.pop(): Int {
+	val size = this.size
+	if (size == 0) throw IllegalArgumentException()
+	val i = this.last()
+	this.removeAt(size - 1)
+	return i
+}

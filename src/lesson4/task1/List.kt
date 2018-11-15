@@ -202,7 +202,7 @@ fun factorizeToString(n: Int): String = TODO()
  */
 fun convert(n: Int, base: Int): List<Int> {
 	var numb = n
-	var digit = mutableListOf<Int>()
+	val digit = mutableListOf<Int>()
 	do {
 		digit.add(numb % base)
 		numb /= base
@@ -219,7 +219,6 @@ fun convert(n: Int, base: Int): List<Int> {
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
 fun convertToString(n: Int, base: Int): String {
-	var numb = n
 	var ans = ""
 	val digit = convert(n, base)
 	val alp = alphabet(base)
@@ -262,11 +261,11 @@ fun decimalFromString(str: String, base: Int): Int {
 
 // составляем алфавит для системы счисления с осн base
 fun alphabet(base: Int): MutableList<Char> {
-	var alp = mutableListOf<Char>()
+	val alp = mutableListOf<Char>()
 	var char: Char
 	for (i in 0 until base) {
-		if (i < 10) char = ('0'+ i).toChar()
-		else char = ('a' + i-10).toChar() // тк 97 код "а", и 10 итераций мы уже прошли
+		char = if (i < 10) ('0' + i)
+		else ('a' + i - 10) // тк 97 код "а", и 10 итераций мы уже прошли
 		alp.add(char)
 	}
 	return alp
@@ -274,7 +273,7 @@ fun alphabet(base: Int): MutableList<Char> {
 
 // переводим цифры к 10тичным числам
 fun normalNumber(str: String, list: MutableList<Char>): MutableList<Int> {
-	var norm = mutableListOf<Int>()
+	val norm = mutableListOf<Int>()
 	for (i in str) norm.add(list.indexOf(i))
 	return norm
 }
@@ -339,8 +338,8 @@ fun dickerInRussian(dicker: Int, digit: Int): String {
 		dicker == 0 -> dig
 		dicker == 1 -> " десять"
 		dicker <= 3 -> d + "дцать" + dig
-		dicker == 4 -> " сорок" + dig
-		dicker == 9 -> " девяносто" + dig
+		dicker == 4 -> " сорок$dig"
+		dicker == 9 -> " девяносто$dig"
 		dicker > 4 -> d + "десят" + dig
 		else -> ""
 	}
@@ -351,8 +350,8 @@ fun hundredInRussian(hundred: Int, dicker: Int, digit: Int): String {
 	val doub = dickerInRussian(dicker, digit)
 	return when {
 		hundred == 0 -> doub
-		hundred == 1 -> " сто" + doub
-		hundred == 2 -> " двести" + doub
+		hundred == 1 -> " сто$doub"
+		hundred == 2 -> " двести$doub"
 		hundred <= 4 -> hund + "ста" + doub
 		hundred > 4 -> hund + "сот" + doub
 		else -> ""
@@ -363,10 +362,10 @@ fun hundredInRussian(hundred: Int, dicker: Int, digit: Int): String {
 //для добавления тысяч
 fun thousand(str: String, dicker: Int, digit: Int): String =
 		when {
-			dicker == 1 || digit > 4 || digit == 0 -> str + " тысяч"
+			dicker == 1 || digit > 4 || digit == 0 -> "$str тысяч"
 			digit == 1 -> str.substringBeforeLast(' ') + " одна тысяча"
 			digit == 2 -> str.substringBeforeLast(' ') + " две тысячи"
-			digit <= 4 -> str + " тысячи"
+			digit <= 4 -> "$str тысячи"
 			else -> ""
 		}
 
@@ -384,10 +383,9 @@ fun digitOfNumber(n: Int): MutableList<Int> {
 
 // удаление лишних пробелов
 fun space(s: String): String {
-	var str = s
-	var length = str.length
-	val list = (1 until length).filterNot() { str[it] == ' ' && str[it - 1] == ' ' }
-	return removeAt(list, str).trim()
+	val length = s.length
+	val list = (1 until length).filterNot { s[it] == ' ' && s[it - 1] == ' ' }
+	return removeAt(list, s).trim()
 }
 
 fun removeAt(list: List<Int>, str: String): String {
