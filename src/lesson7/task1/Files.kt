@@ -63,7 +63,7 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
 	lineIn = lineIn.toLowerCase()
 
 	substrings.forEach {
-		subStrMap[it] = subStrMap.getOrDefault(it, 0) + subStr(lineIn, it.toLowerCase())
+		subStrMap[it] = subStrMap.getOrPut(it) { subStr(lineIn, it.toLowerCase()) }
 	}
 	return subStrMap
 }
@@ -151,8 +151,8 @@ fun alignFileByWidth(inputName: String, outputName: String) {
 	val text = mutableListOf<String>()
 	val testers = File(inputName).readLines()
 	val writer = File(outputName).bufferedWriter()
-	var maxLength = -1
-	var i = -1
+	var maxLength = 0
+	var i = 0
 	for ((j, line) in testers.withIndex()) {
 		text.add(line.space())
 		val tempLength = text.last().length
@@ -162,18 +162,21 @@ fun alignFileByWidth(inputName: String, outputName: String) {
 		}
 	}
 	var ansStr: String
-	val maxBool = testers[i] == testers[i].space()
-	for ((j, line) in text.withIndex()) {
+	if (testers.isEmpty()) {
+		writer.write("")
+	} else {
+		val maxBool = testers[i] == testers[i].space()
+		for ((j, line) in text.withIndex()) {
 
-		ansStr = if ((j != i && tester8(testers[j], maxLength)) || (i == j && maxBool)) testers[j]
-		else normalLine(line, maxLength)
+			ansStr = if ((j != i && tester8(testers[j], maxLength)) || (i == j && maxBool)) testers[j]
+			else normalLine(line, maxLength)
 
-		writer.write(ansStr)
-		writer.newLine()
+			writer.write(ansStr)
+			writer.newLine()
+		}
 	}
 	writer.close()
 }
-
 fun normalLine(line: String, maxLength: Int): String {
 	val words = line.wordInLine()
 	val size = line.length
