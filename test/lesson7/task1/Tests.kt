@@ -1,24 +1,24 @@
 package lesson7.task1
 
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import java.io.File
 
 class Tests {
 
-    private fun assertFileContent(name: String, expectedContent: String) {
-        val file = File(name)
-        val content = file.readLines().joinToString("\n")
-        assertEquals(expectedContent, content)
-    }
+	private fun assertFileContent(name: String, expectedContent: String) {
+		val file = File(name)
+		val content = file.readLines().joinToString("\n")
+		assertEquals(expectedContent, content)
+	}
 
-    @Test
-    @Tag("Example")
-    fun alignFile() {
-        alignFile("input/align_in1.txt", 50, "temp.txt")
-        assertFileContent("temp.txt",
-"""Для написания разных видов программ сейчас
+	@Test
+	@Tag("Example")
+	fun alignFile() {
+		alignFile("input/align_in1.txt", 50, "temp.txt")
+		assertFileContent("temp.txt",
+				"""Для написания разных видов программ сейчас
 применяются разные языки программирования.
 Например, в сфере мобильных программ сейчас правят
 бал языки Swift (мобильные устройства под
@@ -52,24 +52,29 @@ Basic, Ruby, Swift.
 конкретного компьютера или системы. Java также
 включает богатейший набор библиотек для
 разработки.""")
-        File("temp.txt").delete()
-    }
+		File("temp.txt").delete()
+	}
 
-    @Test
-    @Tag("Normal")
-    fun countSubstrings() {
-        assertEquals(mapOf("РАЗНЫЕ" to 2, "ные" to 2, "Неряшливость" to 1, "е" to 49, "эволюция" to 0),
-                countSubstrings("input/substrings_in1.txt", listOf("РАЗНЫЕ", "ные", "Неряшливость", "е", "эволюция")))
-        assertEquals(mapOf("Карминовый" to 2, "Некрасивый" to 2, "белоглазый" to 1),
-                countSubstrings("input/substrings_in1.txt", listOf("Карминовый", "Некрасивый", "белоглазый")))
-    }
+	@Test
+	@Tag("Normal")
+	fun countSubstrings() {
+		assertEquals(mapOf("РАЗНЫЕ" to 2, "ные" to 2, "Неряшливость" to 1, "е" to 49, "эволюция" to 0),
+				countSubstrings("input/substrings_in1.txt", listOf("РАЗНЫЕ", "ные", "Неряшливость", "е", "эволюция")))
+		assertEquals(mapOf("Карминовый" to 2, "Некрасивый" to 2, "белоглазый" to 1),
+				countSubstrings("input/substrings_in1.txt", listOf("Карминовый", "Некрасивый", "белоглазый")))
+	}
 
-    @Test
-    @Tag("Normal")
-    fun sibilants() {
-        sibilants("input/sibilants_in1.txt", "temp.txt")
-        assertFileContent("temp.txt",
-"""/**
+	@Test
+	fun subStr() {
+		assertEquals(4, subStr("eehehe", "e"))
+	}
+
+	@Test
+	@Tag("Normal")
+	fun sibilants() {
+		sibilants("input/sibilants_in1.txt", "temp.txt")
+		assertFileContent("temp.txt",
+				"""/**
  * Простая
  *
  * В русском языке, как правило, после букв Ж, Ч, Ш, Щ пишется И, А, У, а не Ы, Я, Ю.
@@ -83,32 +88,32 @@ Basic, Ruby, Swift.
  *
  * жИ шИ ЖИ Ши ЖА шА Жа ша жу шу жу щу ча шу щу ща жа жи жи жу чу ча
  */""")
-        File("temp.txt").delete()
-    }
+		File("temp.txt").delete()
+	}
 
-    @Test
-    @Tag("Normal")
-    fun centerFile() {
-        centerFile("input/center_in1.txt", "temp.txt")
-        assertFileContent("temp.txt",
-"""              Съешь же ещё этих мягких французских булок, да выпей чаю.
+	@Test
+	@Tag("Normal")
+	fun centerFile() {
+		centerFile("input/center_in1.txt", "temp.txt")
+		assertFileContent("temp.txt",
+				"""              Съешь же ещё этих мягких французских булок, да выпей чаю.
 Широкая электрификация южных губерний даст мощный толчок подъёму сельского хозяйства.
                                         Тест
                                           """ +  // Avoiding trailing whitespaces problem
-"""
+						"""
                                      Hello World
            Во входном файле с именем inputName содержится некоторый текст.
         Вывести его в выходной файл с именем outputName, выровняв по центру.""")
-        File("temp.txt").delete()
+		File("temp.txt").delete()
 
-    }
+	}
 
-    @Test
-    @Tag("Hard")
-    fun alignFileByWidth() {
-        alignFileByWidth("input/width_in1.txt", "temp.txt")
-        assertFileContent("temp.txt",
-                """Простая
+	@Test
+	@Tag("Hard")
+	fun alignFileByWidth() {
+		alignFileByWidth("input/width_in1.txt", "temp.txt")
+		assertFileContent("temp.txt",
+				"""Простая
 
 Во       входном       файле       с       именем       inputName       содержится       некоторый      текст.
 Вывести   его  в  выходной  файл  с  именем  outputName,  выровняв  по  левому  и  правому  краю  относительно
@@ -126,111 +131,129 @@ Basic, Ruby, Swift.
 1)  Число  пробелов  между  каждыми  двумя  парами  соседних  слов  не  должно  отличаться  более,  чем  на 1.
 2)  Число  пробелов  между  более  левой  парой  соседних  слов  должно  быть  больше или равно числу пробелов
 между                более               правой               парой               соседних               слов.""")
-        File("temp.txt").delete()
-
+		File("temp.txt").delete()
     }
+
+	@Test
+	fun spacer() {
+		assertEquals("", spacer(0))
+	}
+
+	@Test
+	fun normalLine() {
+		assertEquals("abcd    efg   qw", normalLine("abcd efg qw", 16))
+        assertEquals("a   b   c   d   e   f  g", normalLine("a b c d e f g", 24))
+	}
 
     @Test
-    @Tag("Normal")
-    fun top20Words() {
-        assertEquals(mapOf<String, Int>(), top20Words("input/empty.txt"))
-        assertEquals(mapOf(
-                "привет" to 4,
-                "все" to 3,
-                "и" to 3,
-                "прямо" to 3,
-                "всё" to 2,
-                "let" to 2,
-                "us" to 2,
-                "write" to 2,
-                "some" to 2,
-                "digits" to 2
-        ), top20Words("input/top20.txt").filter { it.value > 1 })
-        assertEquals(mapOf(
-                "и" to 1106,
-                "в" to 674,
-                "не" to 411,
-                "он" to 306,
-                "на" to 290,
-                "я" to 261,
-                "с" to 260,
-                "как" to 211,
-                "но" to 210,
-                "что" to 187,
-                "все" to 131,
-                "к" to 130,
-                "она" to 126,
-                "его" to 109,
-                "за" to 105,
-                "то" to 104,
-                "а" to 98,
-                "ее" to 95,
-                "мне" to 95,
-                "уж" to 95
-        ), top20Words("input/onegin.txt"))
+    fun tester8() {
+        assertFalse(tester8(" aaaaa", 14))
+        assertFalse(tester8("       ", 7))
+        assertTrue(tester8("aaaaa", 14))
+        assertTrue(tester8( "a       a      a      aa", 24))
+        assertFalse(tester8("a        a      a     aa", 24))
     }
+	@Test
+	@Tag("Normal")
+	fun top20Words() {
+		assertEquals(mapOf<String, Int>(), top20Words("input/empty.txt"))
+		assertEquals(mapOf(
+				"привет" to 4,
+				"все" to 3,
+				"и" to 3,
+				"прямо" to 3,
+				"всё" to 2,
+				"let" to 2,
+				"us" to 2,
+				"write" to 2,
+				"some" to 2,
+				"digits" to 2
+		), top20Words("input/top20.txt").filter { it.value > 1 })
+		assertEquals(mapOf(
+				"и" to 1106,
+				"в" to 674,
+				"не" to 411,
+				"он" to 306,
+				"на" to 290,
+				"я" to 261,
+				"с" to 260,
+				"как" to 211,
+				"но" to 210,
+				"что" to 187,
+				"все" to 131,
+				"к" to 130,
+				"она" to 126,
+				"его" to 109,
+				"за" to 105,
+				"то" to 104,
+				"а" to 98,
+				"ее" to 95,
+				"мне" to 95,
+				"уж" to 95
+		), top20Words("input/onegin.txt"))
+	}
 
-    @Test
-    @Tag("Normal")
-    fun transliterate() {
-        transliterate(
-                "input/trans_in1.txt",
-                mapOf('з' to "zz", 'р' to "r", 'д' to "d", 'й' to "y", 'М' to "m", 'и' to "yy", '!' to "!!!"),
-                "temp.txt"
-        )
-        assertFileContent("temp.txt", "Zzdrавствуy,\nmyyr!!!")
-        File("temp.txt").delete()
+	@Test
+	@Tag("Normal")
+	fun transliterate() {
+		transliterate(
+				"input/trans_in1.txt",
+				mapOf('з' to "zz", 'р' to "r", 'д' to "d", 'й' to "y", 'М' to "m", 'и' to "yy", '!' to "!!!"),
+				"temp.txt"
+		)
+		assertFileContent("temp.txt", "Zzdrавствуy,\nmyyr!!!")
+		File("temp.txt").delete()
 
-        transliterate(
-                "input/trans_in1.txt",
-                mapOf('з' to "zZ", 'р' to "r", 'д' to "d", 'й' to "y", 'М' to "m", 'и' to "YY", '!' to "!!!"),
-                "temp.txt"
-        )
-        assertFileContent("temp.txt", "Zzdrавствуy,\nmyyr!!!")
-        File("temp.txt").delete()
-    }
+		transliterate(
+				"input/trans_in1.txt",
+				mapOf('з' to "zZ", 'р' to "r", 'д' to "d", 'й' to "y", 'М' to "m", 'и' to "YY", '!' to "!!!"),
+				"temp.txt"
+		)
+		assertFileContent("temp.txt", "Zzdrавствуy,\nmyyr!!!")
+		File("temp.txt").delete()
+	}
 
-    @Test
-    @Tag("Normal")
-    fun chooseLongestChaoticWord() {
-        chooseLongestChaoticWord("input/chaotic_in1.txt", "temp.txt")
-        assertFileContent("temp.txt", "Карминовый, Некрасивый")
-        File("temp.txt").delete()
-    }
+	@Test
+	@Tag("Normal")
+	fun chooseLongestChaoticWord() {
+		chooseLongestChaoticWord("input/chaotic_in1.txt", "temp.txt")
+		assertFileContent("temp.txt", "Карминовый, Некрасивый")
+		File("temp.txt").delete()
+	}
 
 
-    private fun checkHtmlSimpleExample() {
-        val result = File("temp.html").readText().replace(Regex("[\\s\\n\\t]"), "")
-        val expected =
-                """
+	private fun checkHtmlSimpleExample() {
+		val result = File("temp.html").readText().replace(Regex("[\\s\\n\\t]"), "")
+		val expected =
+				"""
                     <html>
                         <body>
-                            <p>
+							<p>
                                 Lorem ipsum <i>dolor sit amet</i>, consectetur <b>adipiscing</b> elit.
                                 Vestibulum lobortis. <s>Est vehicula rutrum <i>suscipit</i></s>, ipsum <s>lib</s>ero <i>placerat <b>tortor</b></i>.
-                            </p>
-                            <p>
+                               </p>
+							   <p>
                                 Suspendisse <s>et elit in enim tempus iaculis</s>.
-                            </p>
+								</p>
                         </body>
                     </html>
                     """.trimIndent().replace(Regex("[\\s\\n\\t]"), "")
-        assertEquals(expected, result)
+		assertEquals(expected, result)
 
-        File("temp.html").delete()
-    }
+		File("temp.html").delete()
+	}
 
-    @Test
-    @Tag("Hard")
-    fun markdownToHtmlSimple() {
-        markdownToHtmlSimple("input/markdown_simple.md", "temp.html")
-        checkHtmlSimpleExample()
-    }
+	@Test
+	@Tag("Hard")
+	fun markdownToHtmlSimple() {
+		markdownToHtmlSimple("input/markdown_simple.md", "temp.html")
+		checkHtmlSimpleExample()
+	}
 
-    private fun checkHtmlListsExample() {
-        val result = File("temp.html").readText().replace(Regex("[\\s\\n\\t]"), "")
-        val expected =
-                """
+	private fun checkHtmlListsExample() {
+		val result = File("temp.html").readText().replace(Regex("[\\s\\n\\t]"), "")
+		val expected =
+				"""
                     <html>
                       <body>
                         <ul>
@@ -274,40 +297,40 @@ Basic, Ruby, Swift.
                       </body>
                     </html>
                     """.trimIndent().replace(Regex("[\\s\\n\\t]"), "")
-        assertEquals(expected, result)
+		assertEquals(expected, result)
 
-        File("temp.html").delete()
-    }
+		File("temp.html").delete()
+	}
 
-    @Test
-    @Tag("Hard")
-    fun markdownToHtmlLists() {
-        markdownToHtmlLists("input/markdown_lists.md", "temp.html")
-        checkHtmlListsExample()
-    }
+	@Test
+	@Tag("Hard")
+	fun markdownToHtmlLists() {
+		markdownToHtmlLists("input/markdown_lists.md", "temp.html")
+		checkHtmlListsExample()
+	}
 
-    @Test
-    @Tag("Impossible")
-    fun markdownToHtml() {
-        markdownToHtml("input/markdown_simple.md", "temp.html")
-        checkHtmlSimpleExample()
+	@Test
+	@Tag("Impossible")
+	fun markdownToHtml() {
+		markdownToHtml("input/markdown_simple.md", "temp.html")
+		checkHtmlSimpleExample()
 
-        markdownToHtml("input/markdown_lists.md", "temp.html")
-        checkHtmlListsExample()
-    }
+		markdownToHtml("input/markdown_lists.md", "temp.html")
+		checkHtmlListsExample()
+	}
 
-    @Test
-    @Tag("Normal")
-    fun printMultiplicationProcess() {
-        fun test(lhv: Int, rhv: Int, res: String) {
-            printMultiplicationProcess(lhv, rhv, "temp.txt")
-            assertFileContent("temp.txt", res.trimIndent())
-            File("temp.txt").delete()
-        }
+	@Test
+	@Tag("Normal")
+	fun printMultiplicationProcess() {
+		fun test(lhv: Int, rhv: Int, res: String) {
+			printMultiplicationProcess(lhv, rhv, "temp.txt")
+			assertFileContent("temp.txt", res.trimIndent())
+			File("temp.txt").delete()
+		}
 
-        test(19935,
-             111,
-             """
+		test(19935,
+				111,
+				"""
                 19935
              *    111
              --------
@@ -317,11 +340,11 @@ Basic, Ruby, Swift.
              --------
               2212785
              """
-        )
+		)
 
-        test(12345,
-             76,
-             """
+		test(12345,
+				76,
+				"""
                12345
              *    76
              -------
@@ -330,11 +353,11 @@ Basic, Ruby, Swift.
              -------
               938220
              """
-        )
+		)
 
-        test(12345,
-             6,
-             """
+		test(12345,
+				6,
+				"""
               12345
              *    6
              ------
@@ -342,23 +365,23 @@ Basic, Ruby, Swift.
              ------
               74070
              """
-        )
+		)
 
-    }
+	}
 
-    @Test
-    @Tag("Hard")
-    fun printDivisionProcess() {
+	@Test
+	@Tag("Hard")
+	fun printDivisionProcess() {
 
-        fun test(lhv: Int, rhv: Int, res: String) {
-            printDivisionProcess(lhv, rhv, "temp.txt")
-            assertFileContent("temp.txt", res.trimIndent())
-            File("temp.txt").delete()
-        }
+		fun test(lhv: Int, rhv: Int, res: String) {
+			printDivisionProcess(lhv, rhv, "temp.txt")
+			assertFileContent("temp.txt", res.trimIndent())
+			File("temp.txt").delete()
+		}
 
-        test(199735,
-             22,
-             """
+		test(199735,
+				22,
+				"""
               19935 | 22
              -198     906
              ----
@@ -370,21 +393,21 @@ Basic, Ruby, Swift.
                ----
                   3
              """
-        )
+		)
 
-        test(2,
-             20,
-             """
+		test(2,
+				20,
+				"""
               2 | 20
              -0   0
              --
               2
              """
-        )
+		)
 
-        test(99999,
-             1,
-             """
+		test(99999,
+				1,
+				"""
               99999 | 1
              -9       99999
              --
@@ -402,8 +425,8 @@ Basic, Ruby, Swift.
                  --
                   0
              """
-        )
+		)
 
-        File("temp.txt").delete()
-    }
+		File("temp.txt").delete()
+	}
 }

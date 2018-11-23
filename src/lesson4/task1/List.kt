@@ -306,7 +306,7 @@ fun russian(n: Int): String {
 	if (numbRus.isNotEmpty()) numbRus = thousand(numbRus, digitsNumber[4], digitsNumber[3])
 	numbRus += hundredInRussian(digitsNumber[2], digitsNumber[1], digitsNumber[0])
 
-	return space(numbRus)
+	return numbRus.space()
 }
 
 
@@ -382,10 +382,13 @@ fun digitOfNumber(n: Int): MutableList<Int> {
 }
 
 // удаление лишних пробелов
-fun space(s: String): String {
-	val length = s.length
-	val list = (1 until length).filterNot { s[it] == ' ' && s[it - 1] == ' ' }
-	return removeAt(list, s).trim()
+fun String.space(): String {
+	val length = this.length
+	return if (length == 0) this
+	else {
+		val list = (1 until length).filterNot { this[it] == ' ' && this[it - 1] == ' ' }
+		removeAt(list, this).trim()
+	}
 }
 
 fun removeAt(list: List<Int>, str: String): String {

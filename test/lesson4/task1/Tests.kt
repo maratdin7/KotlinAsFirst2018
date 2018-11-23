@@ -236,7 +236,7 @@ class Tests {
 
     @Test
     fun space() {
-        assertEquals("дв ен адц а т ь", space("   дв  ен адц    а  т   ь  "))
+        assertEquals("d ffd", "d ffd ".space())
 
     }
 }
