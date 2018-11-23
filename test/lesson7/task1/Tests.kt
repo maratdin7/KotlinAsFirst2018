@@ -132,7 +132,8 @@ Basic, Ruby, Swift.
 2)  Число  пробелов  между  более  левой  парой  соседних  слов  должно  быть  больше или равно числу пробелов
 между                более               правой               парой               соседних               слов.""")
 		File("temp.txt").delete()
-    }
+	}
+
 
 	@Test
 	fun spacer() {
@@ -142,17 +143,18 @@ Basic, Ruby, Swift.
 	@Test
 	fun normalLine() {
 		assertEquals("abcd    efg   qw", normalLine("abcd efg qw", 16))
-        assertEquals("a   b   c   d   e   f  g", normalLine("a b c d e f g", 24))
+		assertEquals("a   b   c   d   e   f  g", normalLine("a b c d e f g", 24))
 	}
 
-    @Test
-    fun tester8() {
-        assertFalse(tester8(" aaaaa", 14))
-        assertFalse(tester8("       ", 7))
-        assertTrue(tester8("aaaaa", 14))
-        assertTrue(tester8( "a       a      a      aa", 24))
-        assertFalse(tester8("a        a      a     aa", 24))
-    }
+	@Test
+	fun tester8() {
+		assertFalse(tester8(" aaaaa", 14))
+		assertFalse(tester8("       ", 7))
+		assertTrue(tester8("aaaaa", 14))
+		assertTrue(tester8("a       a      a      aa", 24))
+		assertFalse(tester8("a        a      a     aa", 24))
+	}
+
 	@Test
 	@Tag("Normal")
 	fun top20Words() {
