@@ -401,8 +401,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 						s = wave(s, newLine, j)
 					}
 					tempWave = 0
-					newLine.append(char)
+
 				}
+				newLine.append(char)
 			}
 		}
 		if (tempStar != 0) {
