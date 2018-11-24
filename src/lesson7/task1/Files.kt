@@ -369,10 +369,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 	writer.newLine()
 	val text = File(inputName).readLines()
 	val workInText = mutableListOf("<p>")
-	var i = -1
-	var b = -1
+	var i = -1 to -1
+	var b = -1 to -1
 	var s = -1
-	var p = 0
 	for (line in text) {
 		var tempStar = 0
 		var tempWave = 0
@@ -383,7 +382,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 		}
 		val j = workInText.size
 		val newLine = StringBuilder()
-		for (char in line) {
+		for ((y, char) in line.withIndex()) {
 			if (char == '*') {
 				tempStar++
 				if (tempWave == 2) {
@@ -391,7 +390,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 				}
 				tempWave = 0 //_____________________________________________________________
 			} else {
-				val temp = stars(i, b, tempStar, newLine, j)
+				val temp = stars(i, b, tempStar, newLine, j, y)
 				i = temp.first
 				b = temp.second
 				tempStar = 0
@@ -407,7 +406,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 			}
 		}
 		if (tempStar != 0) {
-			val temp = stars(i, b, tempStar, newLine, j)
+			val temp = stars(i, b, tempStar, newLine, j, line.length - 1)
 			i = temp.first
 			b = temp.second
 		}
@@ -417,9 +416,32 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 		workInText.add(newLine.toString())
 	}
 	workInText.add("</p>")
+	for (y in 0 until workInText.size) {
+		var str = workInText[y]
+		if (b.first == y) str = str.delet("<b>", "**")
+		if (i.first == y) str = str.delet("<i>", "*")
+		writer.write(str)
+		writer.newLine()
+	}
 	writer.write("</body>\n</html>")
 	writer.newLine()
 	writer.close()
+}
+
+fun String.delet(subStr: String, c: String): String {
+	val j = this.lastIndexOf(subStr)
+	val ans = StringBuilder()
+	var i = 0
+	while (i < this.length) {
+		if (i == j) {
+			ans.append(c)
+			i += 3
+			continue
+		}
+		ans.append(this[i])
+		i++
+	}
+	return ans.toString()
 }
 
 fun wave(s: Int, newLine: StringBuilder, j: Int): Int =
@@ -431,38 +453,54 @@ fun wave(s: Int, newLine: StringBuilder, j: Int): Int =
 			-1
 		}
 
-fun stars(i: Int,
-		  b: Int,
+fun stars(i: Pair<Int, Int>,
+		  b: Pair<Int, Int>,
 		  tempStar: Int,
 		  newLine: StringBuilder,
-		  j: Int): Pair<Int, Int> =
+		  j: Int,
+		  y: Int): Pair<Pair<Int, Int>, Pair<Int, Int>> =
 
 		when (tempStar) {
-			3 -> treeStar(i, b, newLine, j)
-			2 -> i to ib(b, 'b', newLine, j)
-			1 -> ib(i, 'i', newLine, j) to b
+			3 -> treeStar(i, b, newLine, j, y)
+			2 -> i to ib(b.first, 'b', newLine, j, y)
+			1 -> ib(i.first, 'i', newLine, j, y) to b
 			else -> i to b
 		}
 
-fun treeStar(i: Int, b: Int, newLine: StringBuilder, j: Int): Pair<Int, Int> =
-		if (i == -1) {
-			val temp = ib(b, 'b', newLine, j)
-			ib(i, 'i', newLine, j)
-			j to temp
-		} else {
-			if ()
-			ib(i, 'i', newLine, j)
-			val temp = ib(b, 'b', newLine, j)
-			-1 to temp
-		}
+fun treeStar(iLast: Pair<Int, Int>,
+			 bLast: Pair<Int, Int>,
+			 newLine: StringBuilder,
+			 j: Int,
+			 y: Int): Pair<Pair<Int, Int>, Pair<Int, Int>> {
+	val i = iLast.first
+	val b = bLast.first
+	return when {
+		(i == -1) -> iPairb(b, 'b', i, 'i', newLine, j, y)
+		(b != -1) -> {
+			when {
+				i == b -> if (iLast.second >= bLast.second)
+					iPairb(i, 'i', b, 'b', newLine, j, y)
+				else iPairb(b, 'b', i, 'i', newLine, j, y)
 
-fun ib(a: Int, iOrb: Char, newLine: StringBuilder, j: Int): Int =
+				i < b -> iPairb(b, 'b', i, 'i', newLine, j, y)
+
+				else -> iPairb(i, 'i', b, 'b', newLine, j, y)
+			}
+		}
+		else -> iPairb(i, 'i', b, 'b', newLine, j, y)
+	}
+}
+
+fun iPairb(f: Int, fChar: Char, s: Int, sChar: Char, newLine: StringBuilder, j: Int, y: Int) =
+		(ib(f, fChar, newLine, j, y) to ib(s, sChar, newLine, j, y))
+
+fun ib(a: Int, iOrb: Char, newLine: StringBuilder, j: Int, y: Int): Pair<Int, Int> =
 		if (a == -1) {
 			newLine.append("<$iOrb>")
-			j
+			j to y
 		} else {
 			newLine.append("</$iOrb>")
-			-1
+			-1 to -1
 		}
 
 /**
