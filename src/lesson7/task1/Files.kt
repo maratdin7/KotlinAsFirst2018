@@ -389,7 +389,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 				if (tempWave == 2) {
 					s = wave(s, newLine, j)
 				}
-				tempWave = 0 //_____________________________________________________________
+				tempWave = 0
 			} else {
 				val temp = stars(i, b, tempStar, newLine, j, y)
 				i = temp.first
@@ -398,13 +398,14 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 
 				if (char == '~') tempWave++
 				else {
-					if (tempWave == 2) {
-						s = wave(s, newLine, j)
+					when {
+						(tempWave == 2) -> s = wave(s, newLine, j)
+						(tempWave == 1) -> newLine.append('~')
 					}
 					tempWave = 0
-
+					newLine.append(char)
 				}
-				newLine.append(char)
+
 			}
 		}
 		if (tempStar != 0) {
@@ -412,8 +413,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 			i = temp.first
 			b = temp.second
 		}
-		if (tempWave == 2) {
-			s = wave(s, newLine, j)
+		when {
+			(tempWave == 2) -> s = wave(s, newLine, j)
+			(tempWave == 1) -> newLine.append('~')
 		}
 		workInText.add(newLine.toString())
 	}
