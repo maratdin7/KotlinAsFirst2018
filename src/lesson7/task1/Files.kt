@@ -177,6 +177,7 @@ fun alignFileByWidth(inputName: String, outputName: String) {
 	}
 	writer.close()
 }
+
 fun normalLine(line: String, maxLength: Int): String {
 	val words = line.wordInLine()
 	val size = line.length
@@ -366,133 +367,103 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 	val writer = File(outputName).bufferedWriter()
 	writer.write("<html> \n <body>")
 	writer.newLine()
-	val str = File(inputName).readText().space()
-
-	val closer = mutableListOf<String>()
-	var i = true
-	var b = true
-	var s = true
-	var p = true
-	if (str.isNotEmpty()) p = pWriter(p, writer)
-
-	for (line in File(inputName).readLines()) {
-		if (line.isEmpty()) {
-			p = pWriter(p, writer)
-			continue
-		}
+	val text = File(inputName).readLines()
+	val workInText = mutableListOf("<p>")
+	var i = -1
+	var b = -1
+	var s = -1
+	var p = 0
+	for (line in text) {
 		var tempStar = 0
 		var tempWave = 0
+		if (line.isEmpty()) {
+			workInText.add("</p>")
+			workInText.add("<p>")
+			continue
+		}
+		val j = workInText.size
 		val newLine = StringBuilder()
 		for (char in line) {
 			if (char == '*') {
 				tempStar++
-				s = wave(tempWave, s, newLine)
-				tempWave = 0
+				if (tempWave == 2) {
+					s = wave(s, newLine, j)
+				}
+				tempWave = 0 //_____________________________________________________________
 			} else {
-				val temp = stars(i, b, tempStar, newLine, closer)
+				val temp = stars(i, b, tempStar, newLine, j)
 				i = temp.first
 				b = temp.second
+				tempStar = 0
+
 				if (char == '~') tempWave++
 				else {
-					s = wave(tempWave, s, newLine)
+					if (tempWave == 2) {
+						s = wave(s, newLine, j)
+					}
 					tempWave = 0
 					newLine.append(char)
 				}
-				tempStar = 0
 			}
 		}
 		if (tempStar != 0) {
-			val temp = stars(i, b, tempStar, newLine, closer)
+			val temp = stars(i, b, tempStar, newLine, j)
 			i = temp.first
 			b = temp.second
 		}
-		s = wave(tempWave, s, newLine)
-		if (p) {
-			p = pWriter(p, writer)
+		if (tempWave == 2) {
+			s = wave(s, newLine, j)
 		}
-		writer.write(newLine.toString())
-		writer.newLine()
+		workInText.add(newLine.toString())
 	}
-
-	if (str.isNotEmpty()) pWriter(p, writer)
+	workInText.add("</p>")
 	writer.write("</body>\n</html>")
 	writer.newLine()
 	writer.close()
 }
 
-fun pWriter(p: Boolean, writer: BufferedWriter): Boolean {
-	writer.write(
-			if (p) "<p>"
-			else "</p>")
-	writer.newLine()
-	return !p
-}
-
-fun treeStar(i: Boolean, b: Boolean, closer: MutableList<String>, newLine: StringBuilder) =
-		when {
-			(i && b) || (i && !b) -> {
-				newLine.append(ib(b, 'b', closer))
-				newLine.append(ib(i, 'i', closer))
-			}
-			(!i && b) -> {
-				newLine.append(ib(i, 'i', closer))
-				newLine.append(ib(b, 'b', closer))
-			}
-			(!i && !b) -> {
-				newLine.append(closer.pop())
-				newLine.append(closer.pop())
-			}
-			else -> {
-			}
-		}!!
-
-fun stars(i: Boolean,
-		  b: Boolean,
-		  tempStar: Int,
-		  newLine: StringBuilder,
-		  closer: MutableList<String>): Pair<Boolean, Boolean> = when (tempStar) {
-	3 -> {
-		treeStar(i, b, closer, newLine)
-		!i to !b
-	}
-	2 -> {
-		newLine.append(ib(b, 'b', closer))
-		i to !b
-	}
-	1 -> {
-		newLine.append(ib(i, 'i', closer))
-		!i to b
-	}
-	else -> {
-		i to b
-	}
-}
-
-
-fun wave(size: Int, s: Boolean, newLine: StringBuilder): Boolean =
-		if (size != 0) {
-			if (s) newLine.append("<s>")
-			else newLine.append("</s>")
-			!s
-		} else s
-
-fun ib(a: Boolean, iOrb: Char, closer: MutableList<String>): String =
-		if (a) {
-			closer.add("</$iOrb>")
-			"<$iOrb>"
+fun wave(s: Int, newLine: StringBuilder, j: Int): Int =
+		if (s == -1) {
+			newLine.append("<s>")
+			j
 		} else {
-			val test = closer.pop()
-			if (test != "</$iOrb>") throw IllegalArgumentException()
-			else test
+			newLine.append("</s>")
+			-1
 		}
 
-fun MutableList<String>.pop(): String {
-	val size = this.size
-	if (size == 0) throw IllegalArgumentException()
-	val i = this.last()
-	this.removeAt(size - 1)
-	return i
-}
+fun stars(i: Int,
+		  b: Int,
+		  tempStar: Int,
+		  newLine: StringBuilder,
+		  j: Int): Pair<Int, Int> =
+
+		when (tempStar) {
+			3 -> treeStar(i, b, newLine, j)
+			2 -> i to ib(b, 'b', newLine, j)
+			1 -> ib(i, 'i', newLine, j) to b
+			else -> i to b
+		}
+
+fun treeStar(i: Int, b: Int, newLine: StringBuilder, j: Int): Pair<Int, Int> =
+		if (i == -1) {
+			val temp = ib(b, 'b', newLine, j)
+			ib(i, 'i', newLine, j)
+			j to temp
+		} else {
+			if ()
+			ib(i, 'i', newLine, j)
+			val temp = ib(b, 'b', newLine, j)
+			-1 to temp
+		}
+
+fun ib(a: Int, iOrb: Char, newLine: StringBuilder, j: Int): Int =
+		if (a == -1) {
+			newLine.append("<$iOrb>")
+			j
+		} else {
+			newLine.append("</$iOrb>")
+			-1
+		}
 
 /**
  * Сложная
