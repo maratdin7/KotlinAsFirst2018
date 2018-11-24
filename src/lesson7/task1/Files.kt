@@ -421,6 +421,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 		var str = workInText[y]
 		if (b.first == y) str = str.delet("<b>", "**")
 		if (i.first == y) str = str.delet("<i>", "*")
+		if (s == y) str = str.delet("<s>", "~~")
 		writer.write(str)
 		writer.newLine()
 	}
