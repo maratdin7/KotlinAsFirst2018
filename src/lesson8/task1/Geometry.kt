@@ -190,7 +190,7 @@ class Line private constructor(val b: Double, val angle: Double) {
 	private fun xZero(zero: Line, normal: Line): Point {
 		val yCross = zero.b / cos(zero.angle)
 		return if (normal.angle == 0.0) throw IllegalArgumentException()
-		else Point(yCross, (yCross * cos(normal.angle) - normal.b) / sin(normal.angle))
+		else Point((yCross * cos(normal.angle) - normal.b) / sin(normal.angle), yCross)
 	}
 
 	override fun equals(other: Any?) = other is Line && angle == other.angle && b == other.b
