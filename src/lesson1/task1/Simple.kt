@@ -2,6 +2,8 @@
 
 package lesson1.task1
 
+import lesson6.task1.number
+import lesson7.task1.spacer
 import java.lang.Math.pow
 import kotlin.math.*
 

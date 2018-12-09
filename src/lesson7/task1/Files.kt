@@ -63,12 +63,12 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
 	lineIn = lineIn.toLowerCase()
 
 	substrings.forEach {
-		subStrMap[it] = subStrMap.getOrPut(it) { subStr(lineIn, it.toLowerCase()) }
+		subStrMap[it] = subStrMap.getOrPut(it) { inStr(lineIn, it.toLowerCase()) }
 	}
 	return subStrMap
 }
 
-fun subStr(first: String, second: String): Int {
+fun inStr(first: String, second: String): Int {
 	var j = 0
 	val size = first.length
 	var i = 0
@@ -208,9 +208,7 @@ fun String.wordInLine(): Int {
 	return i
 }
 
-fun spacer(big: Int): String = buildString {
-	for (i in 1..big) append(' ')
-}
+fun spacer(big: Int): String = "".padEnd(big, ' ')
 
 fun tester8(line: String, maxLength: Int): Boolean {
 	if (line.isEmpty()) return true
