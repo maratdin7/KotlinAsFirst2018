@@ -202,22 +202,24 @@ fun lineBySegment(s: Segment): Line = TODO()
  * Построить прямую по двум точкам
  */
 fun lineByPoints(a: Point, b: Point): Line {
-	 if ((b.x - a.x) == 0.0) return Line(a, PI / 2)
+	if ((b.x - a.x) == 0.0) return Line(a, PI / 2)
 	val k = (b.y - a.y) / (b.x - a.x)
 	val angle = atan(k)
 	return if (angle < 0.0) Line(a, PI + angle)
 	else Line(a, angle)
 }
+
 /**
  * Сложная
  *
  * Построить серединный перпендикуляр по отрезку или по двум точкам
  */
 fun bisectorByPoints(a: Point, b: Point): Line {
-	var angle = lineByPoints(a, b).angle
-	if (angle < PI / 2) angle += PI / 2
-	else angle -= PI / 2
-	return Line(a.center(b), angle)
+	if ((b.y - a.y) == 0.0) return Line(a.center(b), PI / 2)
+	val k = -1 * ((b.x - a.x) / (b.y - a.y))
+	val angle = atan(k)
+	return if (angle < 0.0) Line(a.center(b), PI + angle)
+	else Line(a.center(b), angle)
 }
 
 /**

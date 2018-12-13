@@ -137,7 +137,7 @@ class Tests {
 		val p4 = Point(3.0, -1.0)
 		val p5 = Point(-3.0, -2.0)
 		val p6 = Point(0.0, 5.0)
-        assertEquals(Segment(p5, p6), diameter(p1, p2, p3, p4, p5, p6))
+		assertEquals(Segment(p5, p6), diameter(p1, p2, p3, p4, p5, p6))
 		assertEquals(Segment(p4, p6), diameter(p1, p2, p3, p4, p6))
 		assertEquals(Segment(p3, p4), diameter(p1, p2, p3, p4))
 		assertEquals(Segment(p2, p4), diameter(p1, p2, p4))
@@ -177,16 +177,15 @@ class Tests {
 		assertApproxEquals(Line(Point(1.0, 1.0), PI / 4), lineByPoints(Point(1.0, 1.0), Point(3.0, 3.0)))
 		assertEquals(2.356194490192345, lineByPoints(Point(5e-324, -632.0), Point(-632.0, 5e-324)).angle)
 		assertEquals(-0.0, lineByPoints(Point(10.0, 0.0), Point(0.0, 0.0)).angle)
-		//assertEquals( 0.08687665625704089, lineByPoints(Point(0.6173706329122851, 0.39713635521006874), Point(-5e-324, 0.3433659124047983)).angle)
 	}
 
 	@Test
 	@Tag("Hard")
 	fun bisectorByPoints() {
+		assertEquals(3.1415926535897927, bisectorByPoints(Point(2.220446049250313e-16, 0.6732490144266188), Point(0.0, 0.0041729122884612835)).angle)
 		assertApproxEquals(Line(Point(2.0, 0.0), PI / 2), bisectorByPoints(Point(0.0, 0.0), Point(4.0, 0.0)))
 		assertApproxEquals(Line(Point(1.0, 2.0), 0.0), bisectorByPoints(Point(1.0, 5.0), Point(1.0, -1.0)))
-		assertEquals(0.7854829255558542, bisectorByPoints(Point(0.9491208721991807, -632.0), Point(-632.0, 0.8418296988808902)).angle)
-		assertEquals(0.286756552, bisectorByPoints(Point(3.0, 4.0), Point(5.0, 0.0)).angle)
+		assertEquals(0.7854829255558543, bisectorByPoints(Point(0.9491208721991807, -632.0), Point(-632.0, 0.8418296988808902)).angle)
 	}
 
 	@Test
@@ -209,7 +208,7 @@ class Tests {
 		println(result)
 		assertTrue(result.center.distance(Point(0.0, 0.0)) < 1e-5)
 		assertEquals(5.0, result.radius, 1e-5)
-		assertEquals(Point(-1202.957376202429, 570.3345426280916), circleByThreePoints(Point(-632.0, -632.0), Point(2.220446049250313e-16, 0.6905934134687732), Point(-632.0, 0.7450496614983971)).center)
+		assertEquals(Point(-315.8868830813263, -315.8868830813263), circleByThreePoints(Point(-2.220446049250313e-16, -632.0), Point(-632.0, 2.220446049250313e-16), Point(0.22623383734751668, 0.0)).center)
 	}
 
 	@Test
