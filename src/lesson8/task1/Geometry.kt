@@ -16,8 +16,6 @@ data class Point(val x: Double, val y: Double) {
 	 */
 	fun distance(other: Point): Double = sqrt(sqr(x - other.x) + sqr(y - other.y))
 
-	fun kStraight(b: Point): Double = (y - b.y) / (x - b.x)
-
 	fun center(b: Point): Point = Point((x + b.x) / 2, (y + b.y) / 2)
 }
 
@@ -203,13 +201,8 @@ fun lineBySegment(s: Segment): Line = TODO()
  *
  * Построить прямую по двум точкам
  */
-fun lineByPoints(a: Point, b: Point): Line {
-	val angel = if ((a.x - b.x) == 0.0) PI / 2
-	else atan(a.kStraight(b))
-
-	return if (angel < 0) Line(a, angel % PI + 1)
-	else Line(a, angel)
-}
+fun lineByPoints(a: Point, b: Point): Line = if ((b.y - a.y) == 0.0) Line(a, 0.0)
+else Line(a, atan2(abs(b.y - a.y), (b.x - a.x)))
 
 /**
  * Сложная

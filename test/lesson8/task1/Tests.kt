@@ -174,6 +174,8 @@ class Tests {
 	fun lineByPoint() {
 		assertApproxEquals(Line(Point(0.0, 0.0), PI / 2), lineByPoints(Point(0.0, 0.0), Point(0.0, 2.0)))
 		assertApproxEquals(Line(Point(1.0, 1.0), PI / 4), lineByPoints(Point(1.0, 1.0), Point(3.0, 3.0)))
+		assertEquals(2.356194490192345, lineByPoints(Point(5e-324, -632.0), Point(-632.0, 5e-324)).angle)
+		assertEquals(0.0, lineByPoints(Point(10.0, 0.0), Point(0.0, 0.0)).angle)
 	}
 
 	@Test
@@ -181,6 +183,8 @@ class Tests {
 	fun bisectorByPoints() {
 		assertApproxEquals(Line(Point(2.0, 0.0), PI / 2), bisectorByPoints(Point(0.0, 0.0), Point(4.0, 0.0)))
 		assertApproxEquals(Line(Point(1.0, 2.0), 0.0), bisectorByPoints(Point(1.0, 5.0), Point(1.0, -1.0)))
+		assertEquals(0.7854829255558542, bisectorByPoints(Point(0.9491208721991807, -632.0), Point(-632.0, 0.8418296988808902)).angle)
+		assertEquals(0.286756552, bisectorByPoints(Point(3.0, 4.0), Point(5.0, 0.0)).angle)
 	}
 
 	@Test
@@ -200,8 +204,10 @@ class Tests {
 	@Tag("Hard")
 	fun circleByThreePoints() {
 		val result = circleByThreePoints(Point(5.0, 0.0), Point(3.0, 4.0), Point(0.0, -5.0))
+		println(result)
 		assertTrue(result.center.distance(Point(0.0, 0.0)) < 1e-5)
 		assertEquals(5.0, result.radius, 1e-5)
+		assertEquals(Point(-1202.957376202429, 570.3345426280916), circleByThreePoints(Point(-632.0, -632.0), Point(2.220446049250313e-16, 0.6905934134687732), Point(-632.0, 0.7450496614983971)).center)
 	}
 
 	@Test
