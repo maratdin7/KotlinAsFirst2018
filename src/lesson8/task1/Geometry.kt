@@ -48,8 +48,7 @@ class Triangle private constructor(private val points: Set<Point>) {
 		val ab2 = sqr(distAb())
 		val ac2 = sqr(distAc())
 		val bc2 = sqr(distBc())
-		val myCos = (ab2 + ac2 - bc2) / (2 * distAc() * distAb())
-		return myCos
+		return (ab2 + ac2 - bc2) / (2 * distAc() * distAb())
 	}
 
 	/**
@@ -169,29 +168,17 @@ class Line private constructor(val b: Double, val angle: Double) {
 	 * Найти точку пересечения с другой линией.
 	 * Для этого необходимо составить и решить систему из двух уравнений (каждое для своей прямой)
 	 */
-	fun crossPoint(other: Line): Point =
-			when {
-				angle == PI / 2 -> yZero(this, other)
-				other.angle == PI / 2 -> yZero(other, this)
-				angle == 0.0 -> xZero(this, other)
-				other.angle == 0.0 -> xZero(this, other)
-				else -> {
-					val xCross = (b / cos(angle) - other.b / cos(other.angle)) / (tan(other.angle) - tan(angle))
-					Point(xCross, tan(angle) * xCross + b / cos(angle))
-				}
-			}
+	fun crossPoint(other: Line): Point {
+		val xCross = (other.b * cos(angle) - b * cos(other.angle)) / sin(angle - other.angle)
 
-	private fun yZero(zero: Line, normal: Line): Point {
-		val xCross = -zero.b / sin(zero.angle)
-		return if (normal.angle == PI / 2) throw IllegalArgumentException()
-		else Point(xCross, (xCross * sin(normal.angle) + normal.b) / cos(normal.angle))
+		return if (abs(cos(angle)) > abs(cos(other.angle)))
+			Point(xCross, this.yCross(xCross))
+		else {
+			Point(xCross, other.yCross(xCross))
+		}
 	}
 
-	private fun xZero(zero: Line, normal: Line): Point {
-		val yCross = zero.b / cos(zero.angle)
-		return if (normal.angle == 0.0) throw IllegalArgumentException()
-		else Point((yCross * cos(normal.angle) - normal.b) / sin(normal.angle), yCross)
-	}
+	private fun yCross(xCross: Double): Double = (xCross * sin(this.angle) + this.b) / cos(this.angle)
 
 	override fun equals(other: Any?) = other is Line && angle == other.angle && b == other.b
 
@@ -217,8 +204,10 @@ fun lineBySegment(s: Segment): Line = TODO()
  * Построить прямую по двум точкам
  */
 fun lineByPoints(a: Point, b: Point): Line {
-	val angel = atan(a.kStraight(b))
-	return if (angel < 0) Line(a, angel + PI)
+	val angel = if ((a.x - b.x) == 0.0) PI / 2
+	else atan(a.kStraight(b))
+
+	return if (angel < 0) Line(a, angel % PI + 1)
 	else Line(a, angel)
 }
 
