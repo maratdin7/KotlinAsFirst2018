@@ -201,9 +201,13 @@ fun lineBySegment(s: Segment): Line = TODO()
  *
  * Построить прямую по двум точкам
  */
-fun lineByPoints(a: Point, b: Point): Line = if ((b.y - a.y) == 0.0) Line(a, 0.0)
-else Line(a, atan2(abs(b.y - a.y), (b.x - a.x)))
-
+fun lineByPoints(a: Point, b: Point): Line {
+	 if ((b.x - a.x) == 0.0) return Line(a, PI / 2)
+	val k = (b.y - a.y) / (b.x - a.x)
+	val angle = atan(k)
+	return if (angle < 0.0) Line(a, PI + angle)
+	else Line(a, angle)
+}
 /**
  * Сложная
  *
