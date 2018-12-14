@@ -1,5 +1,9 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson8.task2
+
+import lesson8.task3.Graph
+
 
 /**
  * Клетка шахматной доски. Шахматная доска квадратная и имеет 8 х 8 клеток.
@@ -7,21 +11,25 @@ package lesson8.task2
  * Горизонтали нумеруются снизу вверх, вертикали слева направо.
  */
 data class Square(val column: Int, val row: Int) {
-    /**
-     * Пример
-     *
-     * Возвращает true, если клетка находится в пределах доски
-     */
-    fun inside(): Boolean = column in 1..8 && row in 1..8
+	/**
+	 * Пример
+	 *
+	 * Возвращает true, если клетка находится в пределах доски
+	 */
+	fun inside(): Boolean = column in 1..8 && row in 1..8
 
-    /**
-     * Простая
-     *
-     * Возвращает строковую нотацию для клетки.
-     * В нотации, колонки обозначаются латинскими буквами от a до h, а ряды -- цифрами от 1 до 8.
-     * Для клетки не в пределах доски вернуть пустую строку
-     */
-    fun notation(): String = TODO()
+	/**
+	 * Простая
+	 *
+	 * Возвращает строковую нотацию для клетки.
+	 * В нотации, колонки обозначаются латинскими буквами от a до h, а ряды -- цифрами от 1 до 8.
+	 * Для клетки не в пределах доски вернуть пустую строку
+	 */
+	fun notation(): String = if (this.inside()) {
+		val litter = ('a' + this.column - 1).toString()
+		val number = this.row.toString()
+		litter + number
+	} else ""
 }
 
 /**
@@ -31,7 +39,10 @@ data class Square(val column: Int, val row: Int) {
  * В нотации, колонки обозначаются латинскими буквами от a до h, а ряды -- цифрами от 1 до 8.
  * Если нотация некорректна, бросить IllegalArgumentException
  */
-fun square(notation: String): Square = TODO()
+fun square(notation: String): Square =
+		if (notation.length == 2 && notation[0] in 'a'..'h' && notation[1] in '1'..'8')
+			Square(notation[0].toInt() - 96, notation[1].toInt() - 48)
+		else throw IllegalArgumentException()
 
 /**
  * Простая
@@ -180,7 +191,14 @@ fun kingTrajectory(start: Square, end: Square): List<Square> = TODO()
  * Пример: knightMoveNumber(Square(3, 1), Square(6, 3)) = 3.
  * Конь может последовательно пройти через клетки (5, 2) и (4, 4) к клетке (6, 3).
  */
-fun knightMoveNumber(start: Square, end: Square): Int = TODO()
+fun knightMoveNumber(start: Square, end: Square): Int {
+	if (!start.inside() || !end.inside()) throw IllegalArgumentException()
+
+	val startNotation = start.notation()
+	val endNotation = end.notation()
+	return knightGraph().bfs(startNotation, endNotation).size - 1
+}
+
 
 /**
  * Очень сложная
@@ -202,4 +220,41 @@ fun knightMoveNumber(start: Square, end: Square): Int = TODO()
  *
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun knightTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun knightTrajectory(start: Square, end: Square): List<Square> {
+	if (!start.inside() || !end.inside()) throw IllegalArgumentException()
+
+	val startNotation = start.notation()
+	val endNotation = end.notation()
+	val route = knightGraph().bfs(startNotation, endNotation)
+	val routeInSquare = mutableListOf<Square>()
+	for (i in route) {
+		routeInSquare.add(square(i))
+	}
+	return routeInSquare
+}
+
+fun knightGraph(): Graph {
+	val graph = Graph()
+	for (i in 1..7) {
+		for (j in 1..8) {
+			val now = Square(i, j).notation()
+			graph.getOrDefault(now)
+			val left = Square(i + 1, j - 2).notation()
+			val right = Square(i + 1, j + 2).notation()
+			val leftLower = Square(i + 2, j - 1).notation()
+			val rightLower = Square(i + 2, j + 1).notation()
+			graph.connectNotation(now, left)
+			graph.connectNotation(now, right)
+			graph.connectNotation(now, leftLower)
+			graph.connectNotation(now, rightLower)
+		}
+	}
+	return graph
+}
+
+fun Graph.connectNotation(first: String, second: String) {
+	if (second != "") {
+		this.getOrDefault(second)
+		this.connect(first, second)
+	}
+}
