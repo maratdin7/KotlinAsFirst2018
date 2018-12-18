@@ -41,7 +41,7 @@ data class Square(val column: Int, val row: Int) {
  */
 fun square(notation: String): Square =
 		if (notation.length == 2 && notation[0] in 'a'..'h' && notation[1] in '1'..'8')
-			Square(notation[0].toInt() - 96, notation[1].toInt() - 48)
+			Square(notation[0].toInt() + 1 - 'a'.toInt(), notation[1].toInt() - '0'.toInt())
 		else throw IllegalArgumentException()
 
 /**

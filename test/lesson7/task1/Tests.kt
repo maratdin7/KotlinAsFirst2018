@@ -149,15 +149,6 @@ Basic, Ruby, Swift.
 	}
 
 	@Test
-	fun tester8() {
-		assertFalse(tester8(" aaaaa", 14))
-		assertFalse(tester8("       ", 7))
-		assertTrue(tester8("aaaaa", 14))
-		assertTrue(tester8("a       a      a      aa", 24))
-		assertFalse(tester8("a        a      a     aa", 24))
-	}
-
-	@Test
 	@Tag("Normal")
 	fun top20Words() {
 		assertEquals(mapOf<String, Int>(), top20Words("input/empty.txt"))

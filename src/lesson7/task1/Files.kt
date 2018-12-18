@@ -153,25 +153,19 @@ fun alignFileByWidth(inputName: String, outputName: String) {
 	val testers = File(inputName).readLines()
 	val writer = File(outputName).bufferedWriter()
 	var maxLength = 0
-	var i = 0
-	for ((j, line) in testers.withIndex()) {
+	for (line in testers) {
 		text.add(line.space())
 		val tempLength = text.last().length
 		if (tempLength > maxLength) {
 			maxLength = tempLength
-			i = j
 		}
 	}
 	var ansStr: String
 	if (testers.isEmpty()) {
 		writer.write("")
 	} else {
-		val maxBool = testers[i] == testers[i].space()
-		for ((j, line) in text.withIndex()) {
-
-			ansStr = if ((j != i && tester8(testers[j], maxLength)) || (i == j && maxBool)) testers[j]
-			else normalLine(line, maxLength)
-
+		for (line in text) {
+			ansStr = normalLine(line, maxLength)
 			writer.write(ansStr)
 			writer.newLine()
 		}
@@ -209,27 +203,6 @@ fun String.wordInLine(): Int {
 }
 
 fun spacer(big: Int): String = "".padEnd(big, ' ')
-
-fun tester8(line: String, maxLength: Int): Boolean {
-	if (line.isEmpty()) return true
-	if (line.first() == ' ' || line.last() == ' ') return false
-	var spaces = 0
-	var lastSpaces = -1
-	val length = line.length
-	for (i in 1 until length) {
-		when {
-			line[i] == ' ' -> spaces++
-			line[i - 1] == ' ' -> {
-				if (((lastSpaces - spaces) in 0..1) || lastSpaces == -1) {
-					lastSpaces = spaces
-					spaces = 0
-				} else return false
-			}
-		}
-	}
-
-	return (lastSpaces != -1 && length == maxLength) || lastSpaces == -1
-}
 
 /**
  * Средняя
